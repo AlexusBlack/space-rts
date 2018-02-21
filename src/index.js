@@ -12,8 +12,26 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( resolution.x, resolution.y );
 document.body.appendChild( renderer.domElement );
 
-var axes = new THREE.AxisHelper(100);
+var axes = new THREE.AxesHelper(100);
 scene.add(axes);
+
+////////////
+// skybox //
+////////////
+var materialArray = [
+];
+materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('images/skyboxes/ame-nebula/purplenebula_right.png') }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('images/skyboxes/ame-nebula/purplenebula_left.png') }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('images/skyboxes/ame-nebula/purplenebula_up.png') }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('images/skyboxes/ame-nebula/purplenebula_down.png') }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('images/skyboxes/ame-nebula/purplenebula_front.png') }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('images/skyboxes/ame-nebula/purplenebula_back.png') }));
+for (var i = 0; i < 6; i++)
+   materialArray[i].side = THREE.BackSide;
+//var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
+var skyboxGeom = new THREE.CubeGeometry( 500, 500, 500, 1, 1, 1 );
+var skybox = new THREE.Mesh( skyboxGeom, materialArray );
+scene.add( skybox );
 
 var dirLight = new THREE.DirectionalLight( 0xffffff );
 dirLight.position.set( 0, 0, 5 ).normalize();
