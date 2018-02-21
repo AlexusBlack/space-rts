@@ -7,6 +7,7 @@ const resolution = {
   x: 800,
   y: 600
 };
+const mapSize = 1500;
 
 const scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, resolution.x / resolution.y, 0.1, 1000 );
@@ -26,9 +27,14 @@ var controls = new THREE.OrbitControls( camera, renderer.domElement );
 
 var axes = new THREE.AxesHelper(100);
 scene.add(axes);
-const skybox = Skybox.create('images/skyboxes/ame-nebula/purplenebula');
-
+const skybox = Skybox.create('images/skyboxes/ame-nebula/purplenebula', mapSize);
 scene.add( skybox );
+
+const helperGridSize = mapSize;
+const helperGrid = new THREE.GridHelper(helperGridSize, helperGridSize/10, new THREE.Color(0x333333), new THREE.Color(0x333333));
+//helperGrid.position.set(0,0,0 );
+//helperGrid.rotation.x = Math.PI/2;
+scene.add(helperGrid);
 
 var dirLight = new THREE.DirectionalLight( 0xffffff );
 dirLight.position.set( 0, 0, 5 ).normalize();
@@ -63,6 +69,9 @@ var line = new THREE.Line( lineGeometry, lineMaterial );
 scene.add( line );
 
 camera.position.z = 5;
+camera.position.x = 5;
+camera.position.y = 5;
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 function animate() {
 	requestAnimationFrame( animate );
