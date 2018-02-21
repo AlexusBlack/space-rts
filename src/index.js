@@ -12,6 +12,9 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( resolution.x, resolution.y );
 document.body.appendChild( renderer.domElement );
 
+var axes = new THREE.AxisHelper(100);
+scene.add(axes);
+
 var dirLight = new THREE.DirectionalLight( 0xffffff );
 dirLight.position.set( 0, 0, 5 ).normalize();
 scene.add( dirLight );
