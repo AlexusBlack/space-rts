@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import './OrbitControls';
+import OrbitControls from './OrbitControls';
 import * as Skybox from './skybox';
 
 
@@ -23,7 +23,7 @@ document.body.appendChild( renderer.domElement );
 // move mouse and: left   click to rotate, 
 //                 middle click to zoom, 
 //                 right  click to pan
-var controls = new THREE.OrbitControls( camera, renderer.domElement );
+var controls = new OrbitControls( camera, renderer.domElement );
 
 var axes = new THREE.AxesHelper(100);
 scene.add(axes);
