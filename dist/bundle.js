@@ -46108,11 +46108,22 @@ function createCube() {
 // });
 
 var objectLoader = new __WEBPACK_IMPORTED_MODULE_0_three__["n" /* ObjectLoader */]();
-var ship = null;
-objectLoader.load('models/json/lp_spaceship.json', function ( obj ) {
-  ship = obj;
-  scene.add(ship);
-});
+var ships = [];
+function addShip(type) {
+  return new Promise((resolve, reject) => {
+    objectLoader.load(`models/json/${type}.json`, function ( obj ) {
+      ships.push(obj);
+      scene.add(obj);
+      resolve(obj);
+    });
+  });
+}
+
+addShip('spaceship-2');
+addShip('spaceship-2-green').then((ship) => ship.position.x = -5);
+
+
+
 
 camera.position.z = 5;
 camera.position.x = 5;
@@ -46133,10 +46144,8 @@ function animate(timestamp) {
 	requestAnimationFrame( animate );
   // cube.rotation.x += 0.02;
   // cube.rotation.y += 0.02;
-  if(ship != null) {
+  for(var ship of ships) {
     ship.position.z = position;
-    // ship.rotation.x += 0.02;
-    // ship.rotation.y += 0.02;
   }
   controls.update();
 	renderer.render( scene, camera );
