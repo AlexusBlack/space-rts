@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
-//import OrbitControls from './OrbitControls';
+import OrbitControls from './OrbitControls';
 import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
@@ -27,7 +27,8 @@ document.body.appendChild( renderer.domElement );
 // move mouse and: left   click to rotate, 
 //                 middle click to zoom, 
 //                 right  click to pan
-//var controls = new OrbitControls( camera, renderer.domElement );
+var controls = new OrbitControls( camera, renderer.domElement );
+// controls.maxDistance = 25;
 //console.log(controls.target);
 
 var axes = new THREE.AxesHelper(100);
@@ -104,7 +105,7 @@ function addShipGLTF(type) {
   });
 }
 
-addShipGLTF('scout');
+addShipGLTF('scout').then((ship) => controls.target = ship.position);
 addShipGLTF('miner').then((ship) => ship.position.x = -5);
 addShipGLTF('builder').then((ship) => ship.position.x = 5);
 
@@ -130,7 +131,7 @@ function animate(timestamp) {
     ship.position.z = position;
   }
 
-  //controls.update();
+  // controls.update();
 	renderer.render( scene, camera );
 }
 animate();
