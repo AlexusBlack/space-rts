@@ -46033,7 +46033,7 @@ const mapSize = 1500;
 // Init of scene camera and rendrer
 const scene = new __WEBPACK_IMPORTED_MODULE_0_three__["Scene"]();
 const camera = new __WEBPACK_IMPORTED_MODULE_0_three__["PerspectiveCamera"]( 75, resolution.x / resolution.y, 0.1, 1000 );
-const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]();
+const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]({ antialias: true });
 renderer.setSize( resolution.x, resolution.y );
 document.body.appendChild( renderer.domElement );
 
@@ -46113,7 +46113,7 @@ function addShip(type) {
 var gltfLoader = new __WEBPACK_IMPORTED_MODULE_0_three__["GLTFLoader"]();
 function addShipGLTF(type) {
   return new Promise((resolve, reject) => {
-    gltfLoader.load(`models/gltf/${type}.gltf`, function ( obj ) {
+    gltfLoader.load(`models/gltf/${type}.gltf`, function(obj) {
       var ship = obj.scene;
       ships.push(ship);
       scene.add(ship);
