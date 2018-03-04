@@ -20,6 +20,10 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "three": "^0.90.0"
+    "npm": "^5.7.1",
+    "three": "^0.90.0",
+    "three-fbx-loader": "^1.0.2",
+    "three-gltf2-loader": "^1.2.0",
+    "zlibjs": "^0.3.1"
   }
 }
