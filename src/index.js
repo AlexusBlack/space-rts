@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
-import OrbitControls from './OrbitControls';
+const OrbitControls = require('three-orbit-controls')(THREE)
 import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
@@ -18,8 +18,6 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( resolution.x, resolution.y );
 document.body.appendChild( renderer.domElement );
 
-// var fbxLoader = new THREE.FBXLoader()
-
 //////////////
 // CONTROLS //
 //////////////
@@ -28,7 +26,8 @@ document.body.appendChild( renderer.domElement );
 //                 middle click to zoom, 
 //                 right  click to pan
 var controls = new OrbitControls( camera, renderer.domElement );
-// controls.maxDistance = 25;
+controls.enablePan = false;
+controls.maxDistance = 25;
 //console.log(controls.target);
 
 var axes = new THREE.AxesHelper(100);
@@ -41,6 +40,9 @@ const helperGrid = new THREE.GridHelper(helperGridSize, helperGridSize/10, new T
 //helperGrid.position.set(0,0,0 );
 //helperGrid.rotation.x = Math.PI/2;
 scene.add(helperGrid);
+
+// var ambientLight = new THREE.AmbientLight(0xCCCCCC);
+// scene.add(ambientLight);
 
 var dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
 dirLight.position.set( 5, 5, 2).normalize();
@@ -105,12 +107,15 @@ function addShipGLTF(type) {
   });
 }
 
-addShipGLTF('scout').then((ship) => controls.target = ship.position);
+addShipGLTF('scout').then((ship) => {
+  //controls.target = ship.position; 
+  ship.add(camera);
+});
 addShipGLTF('miner').then((ship) => ship.position.x = -5);
 addShipGLTF('builder').then((ship) => ship.position.x = 5);
 
-camera.position.z = 5;
-camera.position.x = 5;
+//camera.position.z = 5;
+//camera.position.x = 5;
 camera.position.y = 50;
 camera.rotation.x = -90 * Math.PI / 180;
 
@@ -131,7 +136,7 @@ function animate(timestamp) {
     ship.position.z = position;
   }
 
-  // controls.update();
+  controls.update();
 	renderer.render( scene, camera );
 }
 animate();
