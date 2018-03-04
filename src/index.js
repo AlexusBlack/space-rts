@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
-import OrbitControls from './OrbitControls';
+//import OrbitControls from './OrbitControls';
 import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
@@ -27,7 +27,8 @@ document.body.appendChild( renderer.domElement );
 // move mouse and: left   click to rotate, 
 //                 middle click to zoom, 
 //                 right  click to pan
-var controls = new OrbitControls( camera, renderer.domElement );
+//var controls = new OrbitControls( camera, renderer.domElement );
+//console.log(controls.target);
 
 var axes = new THREE.AxesHelper(100);
 scene.add(axes);
@@ -58,18 +59,22 @@ document.addEventListener('keydown', function(event) {
   const keyCode = event.keyCode;
   switch(keyCode) {
     case 37: // Left arrow key
+    case 65: // Left arrow key
       camera.position.x -= movementSpeed;
     break;
 
     case 38: // Up arrow key
+    case 87: // Up arrow key
       camera.position.z -= movementSpeed;
     break;
 
     case 39: // Right arrow key
+    case 68: // Right arrow key
       camera.position.x += movementSpeed;
     break;
 
     case 40: // Down arrow key
+    case 83: // Down arrow key
       camera.position.z += movementSpeed;
     break;
   }
@@ -105,7 +110,8 @@ addShipGLTF('builder').then((ship) => ship.position.x = 5);
 
 camera.position.z = 5;
 camera.position.x = 5;
-camera.position.y = 5;
+camera.position.y = 50;
+camera.rotation.x = -90 * Math.PI / 180;
 
 let startTime = null;
 const speed = 10;
@@ -123,8 +129,8 @@ function animate(timestamp) {
   for(var ship of ships) {
     ship.position.z = position;
   }
-  
-  controls.update();
+
+  //controls.update();
 	renderer.render( scene, camera );
 }
 animate();
