@@ -46022,57 +46022,51 @@ const OrbitControls = __webpack_require__(6)(__WEBPACK_IMPORTED_MODULE_0_three__
 
 __WEBPACK_IMPORTED_MODULE_1_three_gltf2_loader___default()(__WEBPACK_IMPORTED_MODULE_0_three__);
 
+// Screen resolution
 const resolution = {
   x: 800,
   y: 600
 };
+// Map size
 const mapSize = 1500;
 
+// Init of scene camera and rendrer
 const scene = new __WEBPACK_IMPORTED_MODULE_0_three__["Scene"]();
-var camera = new __WEBPACK_IMPORTED_MODULE_0_three__["PerspectiveCamera"]( 75, resolution.x / resolution.y, 0.1, 1000 );
-
-var renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]();
+const camera = new __WEBPACK_IMPORTED_MODULE_0_three__["PerspectiveCamera"]( 75, resolution.x / resolution.y, 0.1, 1000 );
+const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]();
 renderer.setSize( resolution.x, resolution.y );
 document.body.appendChild( renderer.domElement );
 
-//////////////
-// CONTROLS //
-//////////////
-
-// move mouse and: left   click to rotate, 
-//                 middle click to zoom, 
-//                 right  click to pan
-var controls = new OrbitControls( camera, renderer.domElement );
+// Initializing Orbit controls
+// TODO: Replace with custom RTS Controls
+const controls = new OrbitControls( camera, renderer.domElement );
 controls.enablePan = false;
 controls.maxDistance = 25;
-//console.log(controls.target);
 
-var axes = new __WEBPACK_IMPORTED_MODULE_0_three__["AxesHelper"](100);
-scene.add(axes);
+// skybox around map
 const skybox = __WEBPACK_IMPORTED_MODULE_2__skybox__["a" /* create */]('images/skyboxes/ame-nebula/purplenebula', mapSize);
-scene.add( skybox );
+scene.add(skybox);
 
+// Axis helper at 0
+// TODO: remove from later version
+const axesHelper = new __WEBPACK_IMPORTED_MODULE_0_three__["AxesHelper"](100);
+scene.add(axesHelper);
+
+// Helper grid for navigation and edge of map
+// TODO: balance color
+// TODO: make togable
 const helperGridSize = mapSize;
 const helperGrid = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](helperGridSize, helperGridSize/10, new __WEBPACK_IMPORTED_MODULE_0_three__["Color"](0x333333), new __WEBPACK_IMPORTED_MODULE_0_three__["Color"](0x333333));
-//helperGrid.position.set(0,0,0 );
-//helperGrid.rotation.x = Math.PI/2;
 scene.add(helperGrid);
 
-// var ambientLight = new THREE.AmbientLight(0xCCCCCC);
-// scene.add(ambientLight);
-
+// Directional lighting so that modes and their colors\materials are visible
+// TODO: reserach types of light and select best one for RTS
 var dirLight = new __WEBPACK_IMPORTED_MODULE_0_three__["DirectionalLight"]( 0xffffff, 1 );
 dirLight.position.set( 5, 5, 2).normalize();
 dirLight.lookAt(new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](0, 0, 0));
 scene.add( dirLight );
 
-function createCube() {
-  var cubeGeometry = new __WEBPACK_IMPORTED_MODULE_0_three__["BoxGeometry"]( 1, 1, 1 );
-  //var cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xcc0000 } );
-  var cubeMaterial = new __WEBPACK_IMPORTED_MODULE_0_three__["MeshLambertMaterial"]( { color: 0xcc0000, side: __WEBPACK_IMPORTED_MODULE_0_three__["DoubleSide"] } );
-  return new __WEBPACK_IMPORTED_MODULE_0_three__["Mesh"]( cubeGeometry, cubeMaterial );
-}
-
+// TODO: move to RTS Controls
 document.addEventListener('keydown', function(event) {
   const movementSpeed = 0.5;
   event = event || window.event;
@@ -46101,8 +46095,11 @@ document.addEventListener('keydown', function(event) {
   console.log(camera.position.x, camera.position.y, camera.position.z);
 }, false);
 
+// Loads ships on map
+// TODO: replace with unit system
 var objectLoader = new __WEBPACK_IMPORTED_MODULE_0_three__["ObjectLoader"]();
 var ships = [];
+// JSON loader
 function addShip(type) {
   return new Promise((resolve, reject) => {
     objectLoader.load(`models/json/${type}.json`, function ( obj ) {
@@ -46112,6 +46109,7 @@ function addShip(type) {
     });
   });
 }
+// GLTF loader, we will go with it
 var gltfLoader = new __WEBPACK_IMPORTED_MODULE_0_three__["GLTFLoader"]();
 function addShipGLTF(type) {
   return new Promise((resolve, reject) => {
@@ -46124,6 +46122,7 @@ function addShipGLTF(type) {
   });
 }
 
+// Some demo scene setup
 addShipGLTF('scout').then((ship) => {
   //controls.target = ship.position; 
   ship.add(camera);
@@ -46136,6 +46135,8 @@ addShipGLTF('builder').then((ship) => ship.position.x = 5);
 camera.position.y = 50;
 camera.rotation.x = -90 * Math.PI / 180;
 
+// Simple animation system
+// TODO: replace with unit animation system module
 let startTime = null;
 const speed = 10;
 const distance = 100;
@@ -46147,12 +46148,14 @@ function animate(timestamp) {
   let position = distance * progress;
   if(progress > 1) startTime = timestamp;
 
-	requestAnimationFrame( animate );
-
   for(var ship of ships) {
     ship.position.z = position;
   }
 
+  // Starting animation loop again and again
+  requestAnimationFrame( animate );
+
+  // control + render update
   controls.update();
 	renderer.render( scene, camera );
 }
