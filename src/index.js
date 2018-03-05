@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
+import TWEEN from '@tweenjs/tween.js';
 // const OrbitControls = require('three-orbit-controls')(THREE);
 import RTSControls from './rts-controls';
 import * as Skybox from './skybox';
@@ -110,46 +111,36 @@ function addShipGLTF(type) {
       var ship = obj.scene;
       ships.push(ship);
       scene.add(ship);
+      animateShip(ship);
       resolve(ship);
     });
   });
 }
 
+function animateShip(ship) {
+  const speed = 10;
+  const distance = 100;
+  const duration = distance / speed * 1000;
+  new TWEEN.Tween(ship.position)
+    .to({z: 100}, duration)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .repeat(Infinity)
+    .start();
+}
+
 // Some demo scene setup
-addShipGLTF('scout').then((ship) => {
-  //controls.target = ship.position; 
-  //ship.add(camera);
-});
+addShipGLTF('scout');
 addShipGLTF('miner').then((ship) => ship.position.x = -5);
 addShipGLTF('builder').then((ship) => ship.position.x = 5);
 
-//camera.position.z = 5;
-//camera.position.x = 5;
-//camera.position.y = 50;
-//camera.rotation.x = -90 * Math.PI / 180;
-
-// Simple animation system
-// TODO: replace with unit animation system module
-let startTime = null;
-const speed = 10;
-const distance = 100;
-const duration = distance / speed * 1000;
 function animate(timestamp) {
-  if(startTime == null) startTime = timestamp;
-  let time = timestamp - startTime;
-  let progress = time / duration;
-  let position = distance * progress;
-  if(progress > 1) startTime = timestamp;
-
-  for(var ship of ships) {
-    ship.position.z = position;
-  }
 
   // Starting animation loop again and again
-  requestAnimationFrame( animate );
+  requestAnimationFrame(animate);
+  TWEEN.update(timestamp);
 
   // control + render update
   controls.update();
-	renderer.render( scene, camera );
+	renderer.render(scene, camera);
 }
 animate();
