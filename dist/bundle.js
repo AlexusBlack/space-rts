@@ -46036,7 +46036,9 @@ const mapSize = 1500;
 // Init of scene camera and rendrer
 const scene = new __WEBPACK_IMPORTED_MODULE_0_three__["Scene"]();
 const camera = new __WEBPACK_IMPORTED_MODULE_0_three__["PerspectiveCamera"](75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]({ antialias: true });
+// TODO: add antialiasing as an option in settings with OFF by default
+// const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -46044,7 +46046,7 @@ window.addEventListener('resize', onWindowResize, false);
 
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
-const controls = new __WEBPACK_IMPORTED_MODULE_2__rts_controls__["a" /* default */](camera, renderer.domElement);
+const controls = new __WEBPACK_IMPORTED_MODULE_2__rts_controls__["a" /* default */](camera, renderer.domElement, scene);
 //controls.enablePan = false;
 //controls.maxDistance = 25;
 
@@ -46072,33 +46074,33 @@ dirLight.lookAt(new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](0, 0, 0));
 scene.add( dirLight );
 
 // TODO: move to RTS Controls
-document.addEventListener('keydown', function(event) {
-  const movementSpeed = 0.5;
-  event = event || window.event;
-  const keyCode = event.keyCode;
-  switch(keyCode) {
-    case 37: // Left arrow key
-    case 65: // Left arrow key
-      camera.position.x -= movementSpeed;
-    break;
+// document.addEventListener('keydown', function(event) {
+//   const movementSpeed = 0.5;
+//   event = event || window.event;
+//   const keyCode = event.keyCode;
+//   switch(keyCode) {
+//     case 37: // Left arrow key
+//     case 65: // Left arrow key
+//       camera.position.x -= movementSpeed;
+//     break;
 
-    case 38: // Up arrow key
-    case 87: // Up arrow key
-      camera.position.z -= movementSpeed;
-    break;
+//     case 38: // Up arrow key
+//     case 87: // Up arrow key
+//       camera.position.z -= movementSpeed;
+//     break;
 
-    case 39: // Right arrow key
-    case 68: // Right arrow key
-      camera.position.x += movementSpeed;
-    break;
+//     case 39: // Right arrow key
+//     case 68: // Right arrow key
+//       camera.position.x += movementSpeed;
+//     break;
 
-    case 40: // Down arrow key
-    case 83: // Down arrow key
-      camera.position.z += movementSpeed;
-    break;
-  }
-  console.log(camera.position.x, camera.position.y, camera.position.z);
-}, false);
+//     case 40: // Down arrow key
+//     case 83: // Down arrow key
+//       camera.position.z += movementSpeed;
+//     break;
+//   }
+//   console.log(camera.position.x, camera.position.y, camera.position.z);
+// }, false);
 
 // Loads ships on map
 // TODO: replace with unit system
@@ -49647,10 +49649,11 @@ module.exports = function( THREE ) {
 /* harmony export (immutable) */ __webpack_exports__["a"] = RTSControls;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(0);
 // DONE: inherit from OrbitControls
-// TODO: Setup camera to classic RTS position (on top with small angle, zoomable, goes flat when zooms close to object)
+// DONE: Setup camera to classic RTS position (on top with small angle, zoomable, goes flat when zooms close to object)
 // TODO: Move camera on map with arrow keys and wasd
 // TODO: Method to move camera to specific 2d coordinates (x, z)
 // TODO: Option to set camera boundaries (edge of map)
+// TODO: Add simple orbiting with middle mouse button, but after it is release camera returns to standard position
 // TODO: Option to switch to object orbiting mode + reset
 // TODO: Ability to switch between objects in orbiting mode with TAB key
 // TODO: Camera view area via raycaster to show on mini-map
@@ -49658,6 +49661,7 @@ module.exports = function( THREE ) {
 
 const OrbitControls = __webpack_require__(6)(__WEBPACK_IMPORTED_MODULE_0_three__);
 function RTSControls(camera, domElement, scene) {
+    const self = this;
     OrbitControls.call(this, camera, domElement);
 
     // Custom properties
@@ -49665,20 +49669,50 @@ function RTSControls(camera, domElement, scene) {
 
     // default setup
     this.enablePan = false;
-    this.maxDistance = 25;
+    this.enableRotate = false;
+    this.enableZoom = false;
+    this.maxDistance = 100;
+    this.zoomSpeed = 0.5;
 
     // adding empty object as parent and target
-    //const targetObject = new THREE. 
+    const targetObject = new __WEBPACK_IMPORTED_MODULE_0_three__["Object3D"]();
+    targetObject.add(camera);
+    scene.add(targetObject);
 
     // default position
-    camera.position.y = 50;
+    camera.position.y = 75;
+    camera.position.z = 25;
     camera.rotation.x = -90 * Math.PI / 180;
+
+    domElement.addEventListener('wheel', onMouseWheel, false);
+
+    function onMouseWheel(event) {
+        if(this.enabled === false) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        handleMouseWheel(event);
+    }
+
+    function handleMouseWheel(event) {
+        const maxHeight = Math.sqrt(Math.pow(self.maxDistance, 2) - Math.pow(camera.position.z, 2));
+        const newHeight = camera.position.y + event.deltaY * self.zoomSpeed;
+        if(newHeight > maxHeight || newHeight < 0) return;
+
+        camera.position.y = newHeight;
+        //console.log(camera.position.y, maxHeight);
+    }
+
+    const parentDispose = this.dispose;
+    this.dispose = function() {
+        parentDispose();
+        domElement.removeEventListener('wheel', onMouseWheel, false);
+    }
 }
 
 RTSControls.prototype = Object.create(OrbitControls.prototype);
 RTSControls.prototype.constructor = RTSControls;
-
-
 
 
 
