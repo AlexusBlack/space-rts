@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
-const OrbitControls = require('three-orbit-controls')(THREE)
+// const OrbitControls = require('three-orbit-controls')(THREE);
+const RTSControls = require('./rts-controls')(THREE);
 import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
@@ -25,7 +26,7 @@ window.addEventListener('resize', onWindowResize, false);
 
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
-const controls = new OrbitControls( camera, renderer.domElement );
+const controls = new RTSControls(camera, renderer.domElement);
 controls.enablePan = false;
 controls.maxDistance = 25;
 

@@ -46017,7 +46017,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__skybox__ = __webpack_require__(4);
 
 
-const OrbitControls = __webpack_require__(6)(__WEBPACK_IMPORTED_MODULE_0_three__)
+// const OrbitControls = require('three-orbit-controls')(THREE);
+const RTSControls = __webpack_require__(7)(__WEBPACK_IMPORTED_MODULE_0_three__);
 
 
 __WEBPACK_IMPORTED_MODULE_1_three_gltf2_loader___default()(__WEBPACK_IMPORTED_MODULE_0_three__);
@@ -46042,7 +46043,7 @@ window.addEventListener('resize', onWindowResize, false);
 
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
-const controls = new OrbitControls( camera, renderer.domElement );
+const controls = new RTSControls(camera, renderer.domElement);
 controls.enablePan = false;
 controls.maxDistance = 25;
 
@@ -49635,6 +49636,32 @@ module.exports = function( THREE ) {
 
 	return OrbitControls;
 };
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// DONE: inherit from OrbitControls
+// TODO: Setup camera to classic RTS position (on top with small angle, zoomable, goes flat when zooms close to object)
+// TODO: Move camera on map with arrow keys and wasd
+// TODO: Option to set camera boundaries (edge of map)
+// TODO: Option to switch to object orbiting mode + reset
+// TODO: Ability to switch between objects in orbiting mode with TAB key
+// TODO: Camera view area via raycaster to show on mini-map
+module.exports = function(THREE) {
+    const OrbitControls = __webpack_require__(6)(THREE);
+    function RTSControls(object, domElement) {
+        OrbitControls.call(this, object, domElement);
+    }
+    
+    RTSControls.prototype = Object.create(OrbitControls.prototype);
+    RTSControls.prototype.constructor = RTSControls;
+
+    return RTSControls;
+};
+
+
 
 
 /***/ })
