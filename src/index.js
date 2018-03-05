@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
 // const OrbitControls = require('three-orbit-controls')(THREE);
-const RTSControls = require('./rts-controls')(THREE);
+import RTSControls from './rts-controls';
 import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
@@ -27,8 +27,8 @@ window.addEventListener('resize', onWindowResize, false);
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
 const controls = new RTSControls(camera, renderer.domElement);
-controls.enablePan = false;
-controls.maxDistance = 25;
+//controls.enablePan = false;
+//controls.maxDistance = 25;
 
 // skybox around map
 const skybox = Skybox.create('images/skyboxes/ame-nebula/purplenebula', mapSize);
@@ -112,15 +112,15 @@ function addShipGLTF(type) {
 // Some demo scene setup
 addShipGLTF('scout').then((ship) => {
   //controls.target = ship.position; 
-  ship.add(camera);
+  //ship.add(camera);
 });
 addShipGLTF('miner').then((ship) => ship.position.x = -5);
 addShipGLTF('builder').then((ship) => ship.position.x = 5);
 
 //camera.position.z = 5;
 //camera.position.x = 5;
-camera.position.y = 50;
-camera.rotation.x = -90 * Math.PI / 180;
+//camera.position.y = 50;
+//camera.rotation.x = -90 * Math.PI / 180;
 
 // Simple animation system
 // TODO: replace with unit animation system module
