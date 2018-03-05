@@ -49697,8 +49697,9 @@ function RTSControls(camera, domElement, scene) {
 
     function handleMouseWheel(event) {
         const maxHeight = Math.sqrt(Math.pow(self.maxDistance, 2) - Math.pow(camera.position.z, 2));
-        const newHeight = camera.position.y + event.deltaY * self.zoomSpeed;
-        if(newHeight > maxHeight || newHeight < 0) return;
+        let newHeight = camera.position.y + event.deltaY * self.zoomSpeed;
+        if(newHeight > maxHeight) newHeight = maxHeight;
+        if(newHeight < 0) newHeight = 0;
 
         camera.position.y = newHeight;
         //console.log(camera.position.y, maxHeight);
