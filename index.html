@@ -32,6 +32,7 @@
     }
     </style>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/ionicons-npm/css/ionicons.min.css">
 </head>
 <body>
     <div class="ui-container">
@@ -43,23 +44,21 @@
                 
                 <div class="collapse navbar-collapse" id="navbarColor02">
                     <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
+                        <li class="nav-item active" data-toggle="tooltip" data-placement="bottom" title="Deuterium">
+                            <a class="nav-link" href="#"><i class="icon ion-nuclear"></i> 1000</a>
+                        </li>
+                        <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="Energy">
+                            <a class="nav-link" href="#"><i class="icon ion-flash"></i> 100</a>
+                        </li>
+                        <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="Crew">
+                            <a class="nav-link" href="#"><i class="icon ion-person-stalker"></i> 3000</a>
+                        </li>
+                        <li class="nav-item" data-toggle="tooltip" data-placement="bottom" title="Officers">
+                            <a class="nav-link" href="#"><i class="icon ion-android-star"></i> 99</a>
+                        </li>
                     </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+
+                    <button class="btn btn-secondary my-2 my-sm-0"><i class="icon ion-navicon-round"></i></button>
                 </div>
                 </nav>
         <div class="mini-map jumbotron">
@@ -68,6 +67,12 @@
     </div>
     <script src="bundle.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+    </script>
 </body>
 </html>
