@@ -28,7 +28,11 @@ window.addEventListener('resize', onWindowResize, false);
 
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
-const controls = new RTSControls(camera, renderer.domElement, scene);
+const boundaries = new THREE.Box2(
+  new THREE.Vector2(-100, -100),
+  new THREE.Vector2(100, 100)
+);
+const controls = new RTSControls(camera, renderer.domElement, scene, boundaries);
 //controls.enablePan = false;
 //controls.maxDistance = 25;
 
