@@ -6,19 +6,22 @@ import * as Skybox from './skybox';
 GLTF2Loader(THREE);
 
 // Screen resolution
-const resolution = {
-  x: 800,
-  y: 600
-};
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 // Map size
 const mapSize = 1500;
 
 // Init of scene camera and rendrer
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, resolution.x / resolution.y, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize( resolution.x, resolution.y );
-document.body.appendChild( renderer.domElement );
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+window.addEventListener('resize', onWindowResize, false);
 
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
