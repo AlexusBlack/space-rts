@@ -3,10 +3,10 @@
 // DONE: Move camera on map with arrow keys and wasd
 // DONE: Method to move camera to specific 2d coordinates (x, z)
 // DONE: Option to set camera boundaries (edge of map)
-// TODO: Add simple orbiting with middle mouse button, but after it is release camera returns to standard position
-// TODO: Option to switch to object orbiting mode + reset
-// TODO: Ability to switch between objects in orbiting mode with TAB key
 // TODO: Camera view area via raycaster to show on mini-map
+// TODO: Priority Low: Add simple orbiting with middle mouse button, but after it is release camera returns to standard position
+// TODO: Priority Medium: Option to switch to object orbiting mode + reset
+// TODO: Priority Medium: Ability to switch between objects in orbiting mode with TAB key
 import * as THREE from 'three';
 import keycode from 'keycode';
 

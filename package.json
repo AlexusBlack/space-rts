@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@tweenjs/tween.js": "^17.2.0",
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1",
     "keycode": "^2.1.9",
     "npm": "^5.7.1",
     "three": "^0.90.0",

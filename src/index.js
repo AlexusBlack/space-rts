@@ -60,35 +60,6 @@ dirLight.position.set( 5, 5, 2).normalize();
 dirLight.lookAt(new THREE.Vector3(0, 0, 0));
 scene.add( dirLight );
 
-// TODO: move to RTS Controls
-// document.addEventListener('keydown', function(event) {
-//   const movementSpeed = 0.5;
-//   event = event || window.event;
-//   const keyCode = event.keyCode;
-//   switch(keyCode) {
-//     case 37: // Left arrow key
-//     case 65: // Left arrow key
-//       camera.position.x -= movementSpeed;
-//     break;
-
-//     case 38: // Up arrow key
-//     case 87: // Up arrow key
-//       camera.position.z -= movementSpeed;
-//     break;
-
-//     case 39: // Right arrow key
-//     case 68: // Right arrow key
-//       camera.position.x += movementSpeed;
-//     break;
-
-//     case 40: // Down arrow key
-//     case 83: // Down arrow key
-//       camera.position.z += movementSpeed;
-//     break;
-//   }
-//   console.log(camera.position.x, camera.position.y, camera.position.z);
-// }, false);
-
 // Loads ships on map
 // TODO: replace with unit system
 var objectLoader = new THREE.ObjectLoader();
