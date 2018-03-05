@@ -49648,6 +49648,8 @@ module.exports = function( THREE ) {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = RTSControls;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_keycode__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_keycode___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_keycode__);
 // DONE: inherit from OrbitControls
 // DONE: Setup camera to classic RTS position (on top with small angle, zoomable, goes flat when zooms close to object)
 // TODO: Move camera on map with arrow keys and wasd
@@ -49659,13 +49661,22 @@ module.exports = function( THREE ) {
 // TODO: Camera view area via raycaster to show on mini-map
 
 
+
 const OrbitControls = __webpack_require__(6)(__WEBPACK_IMPORTED_MODULE_0_three__);
 function RTSControls(camera, domElement, scene) {
     const self = this;
     OrbitControls.call(this, camera, domElement);
 
     // Custom properties
+    this.keyboardNavigation = true;
+    this.navigationSpeed = 1;
     this._scene = scene;
+    this._movement = {
+        up: false,
+        right: false,
+        down: false,
+        left: false
+    };
 
     // default setup
     this.enablePan = false;
@@ -49685,14 +49696,30 @@ function RTSControls(camera, domElement, scene) {
     camera.rotation.x = -90 * Math.PI / 180;
 
     domElement.addEventListener('wheel', onMouseWheel, false);
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
 
     function onMouseWheel(event) {
-        if(this.enabled === false) return;
+        if(self.enabled === false) return;
 
         event.preventDefault();
         event.stopPropagation();
 
         handleMouseWheel(event);
+    }
+
+    function onKeyDown(event) {
+        if(self.enabled === false || self.keyboardNavigation == false) return;
+
+        const keyCode = event.keyCode;
+        handleKeyStateChange(keyCode, true);
+    }
+
+    function onKeyUp(event) {
+        if(self.enabled === false || self.keyboardNavigation == false) return;
+
+        const keyCode = event.keyCode;
+        handleKeyStateChange(keyCode, false);
     }
 
     function handleMouseWheel(event) {
@@ -49705,16 +49732,212 @@ function RTSControls(camera, domElement, scene) {
         //console.log(camera.position.y, maxHeight);
     }
 
+    function handleKeyStateChange(key, state) {
+        switch (key) {
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.up:
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.w:
+                self._movement.up = state;
+                break;
+            
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.right:
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.d:
+                self._movement.right = state;
+                break;
+            
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.down:
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.s:
+                self._movement.down = state;
+                break;
+            
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.left:
+            case __WEBPACK_IMPORTED_MODULE_1_keycode___default.a.codes.a:
+                self._movement.left = state;
+                break;
+        }
+    }
+
+    const parentUpdate = this.update;
+    this.update = function() {
+        parentUpdate();
+
+        if(self._movement.up) {
+            targetObject.translateZ(-self.navigationSpeed);
+        } 
+        if(self._movement.down) {
+            targetObject.translateZ(self.navigationSpeed);
+        }
+        if(self._movement.right) {
+            targetObject.translateX(self.navigationSpeed);
+        }
+        if(self._movement.left) {
+            targetObject.translateX(-self.navigationSpeed);
+        }
+    };
+
     const parentDispose = this.dispose;
     this.dispose = function() {
         parentDispose();
         domElement.removeEventListener('wheel', onMouseWheel, false);
-    }
+        document.removeEventListener('keydown', onKeyDown, false);
+        document.removeEventListener('keyup', onKeyUp, false);
+    };
 }
 
 RTSControls.prototype = Object.create(OrbitControls.prototype);
 RTSControls.prototype.constructor = RTSControls;
 
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+// Source: http://jsfiddle.net/vWx8V/
+// http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
+
+/**
+ * Conenience method returns corresponding value for given keyName or keyCode.
+ *
+ * @param {Mixed} keyCode {Number} or keyName {String}
+ * @return {Mixed}
+ * @api public
+ */
+
+exports = module.exports = function(searchInput) {
+  // Keyboard Events
+  if (searchInput && 'object' === typeof searchInput) {
+    var hasKeyCode = searchInput.which || searchInput.keyCode || searchInput.charCode
+    if (hasKeyCode) searchInput = hasKeyCode
+  }
+
+  // Numbers
+  if ('number' === typeof searchInput) return names[searchInput]
+
+  // Everything else (cast to string)
+  var search = String(searchInput)
+
+  // check codes
+  var foundNamedKey = codes[search.toLowerCase()]
+  if (foundNamedKey) return foundNamedKey
+
+  // check aliases
+  var foundNamedKey = aliases[search.toLowerCase()]
+  if (foundNamedKey) return foundNamedKey
+
+  // weird character?
+  if (search.length === 1) return search.charCodeAt(0)
+
+  return undefined
+}
+
+/**
+ * Get by name
+ *
+ *   exports.code['enter'] // => 13
+ */
+
+var codes = exports.code = exports.codes = {
+  'backspace': 8,
+  'tab': 9,
+  'enter': 13,
+  'shift': 16,
+  'ctrl': 17,
+  'alt': 18,
+  'pause/break': 19,
+  'caps lock': 20,
+  'esc': 27,
+  'space': 32,
+  'page up': 33,
+  'page down': 34,
+  'end': 35,
+  'home': 36,
+  'left': 37,
+  'up': 38,
+  'right': 39,
+  'down': 40,
+  'insert': 45,
+  'delete': 46,
+  'command': 91,
+  'left command': 91,
+  'right command': 93,
+  'numpad *': 106,
+  'numpad +': 107,
+  'numpad -': 109,
+  'numpad .': 110,
+  'numpad /': 111,
+  'num lock': 144,
+  'scroll lock': 145,
+  'my computer': 182,
+  'my calculator': 183,
+  ';': 186,
+  '=': 187,
+  ',': 188,
+  '-': 189,
+  '.': 190,
+  '/': 191,
+  '`': 192,
+  '[': 219,
+  '\\': 220,
+  ']': 221,
+  "'": 222
+}
+
+// Helper aliases
+
+var aliases = exports.aliases = {
+  'windows': 91,
+  '⇧': 16,
+  '⌥': 18,
+  '⌃': 17,
+  '⌘': 91,
+  'ctl': 17,
+  'control': 17,
+  'option': 18,
+  'pause': 19,
+  'break': 19,
+  'caps': 20,
+  'return': 13,
+  'escape': 27,
+  'spc': 32,
+  'pgup': 33,
+  'pgdn': 34,
+  'ins': 45,
+  'del': 46,
+  'cmd': 91
+}
+
+
+/*!
+ * Programatically add the following
+ */
+
+// lower case chars
+for (i = 97; i < 123; i++) codes[String.fromCharCode(i)] = i - 32
+
+// numbers
+for (var i = 48; i < 58; i++) codes[i - 48] = i
+
+// function keys
+for (i = 1; i < 13; i++) codes['f'+i] = i + 111
+
+// numpad keys
+for (i = 0; i < 10; i++) codes['numpad '+i] = i + 96
+
+/**
+ * Get by code
+ *
+ *   exports.name[13] // => 'Enter'
+ */
+
+var names = exports.names = exports.title = {} // title for backward compat
+
+// Create reverse mapping
+for (i in codes) names[codes[i]] = i
+
+// Add aliases
+for (var alias in aliases) {
+  codes[alias] = aliases[alias]
+}
 
 
 /***/ })

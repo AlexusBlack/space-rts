@@ -8,6 +8,7 @@
 // TODO: Ability to switch between objects in orbiting mode with TAB key
 // TODO: Camera view area via raycaster to show on mini-map
 import * as THREE from 'three';
+import keycode from 'keycode';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 export default function RTSControls(camera, domElement, scene) {
@@ -15,7 +16,15 @@ export default function RTSControls(camera, domElement, scene) {
     OrbitControls.call(this, camera, domElement);
 
     // Custom properties
+    this.keyboardNavigation = true;
+    this.navigationSpeed = 1;
     this._scene = scene;
+    this._movement = {
+        up: false,
+        right: false,
+        down: false,
+        left: false
+    };
 
     // default setup
     this.enablePan = false;
@@ -35,14 +44,30 @@ export default function RTSControls(camera, domElement, scene) {
     camera.rotation.x = -90 * Math.PI / 180;
 
     domElement.addEventListener('wheel', onMouseWheel, false);
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
 
     function onMouseWheel(event) {
-        if(this.enabled === false) return;
+        if(self.enabled === false) return;
 
         event.preventDefault();
         event.stopPropagation();
 
         handleMouseWheel(event);
+    }
+
+    function onKeyDown(event) {
+        if(self.enabled === false || self.keyboardNavigation == false) return;
+
+        const keyCode = event.keyCode;
+        handleKeyStateChange(keyCode, true);
+    }
+
+    function onKeyUp(event) {
+        if(self.enabled === false || self.keyboardNavigation == false) return;
+
+        const keyCode = event.keyCode;
+        handleKeyStateChange(keyCode, false);
     }
 
     function handleMouseWheel(event) {
@@ -55,11 +80,55 @@ export default function RTSControls(camera, domElement, scene) {
         //console.log(camera.position.y, maxHeight);
     }
 
+    function handleKeyStateChange(key, state) {
+        switch (key) {
+            case keycode.codes.up:
+            case keycode.codes.w:
+                self._movement.up = state;
+                break;
+            
+            case keycode.codes.right:
+            case keycode.codes.d:
+                self._movement.right = state;
+                break;
+            
+            case keycode.codes.down:
+            case keycode.codes.s:
+                self._movement.down = state;
+                break;
+            
+            case keycode.codes.left:
+            case keycode.codes.a:
+                self._movement.left = state;
+                break;
+        }
+    }
+
+    const parentUpdate = this.update;
+    this.update = function() {
+        parentUpdate();
+
+        if(self._movement.up) {
+            targetObject.translateZ(-self.navigationSpeed);
+        } 
+        if(self._movement.down) {
+            targetObject.translateZ(self.navigationSpeed);
+        }
+        if(self._movement.right) {
+            targetObject.translateX(self.navigationSpeed);
+        }
+        if(self._movement.left) {
+            targetObject.translateX(-self.navigationSpeed);
+        }
+    };
+
     const parentDispose = this.dispose;
     this.dispose = function() {
         parentDispose();
         domElement.removeEventListener('wheel', onMouseWheel, false);
-    }
+        document.removeEventListener('keydown', onKeyDown, false);
+        document.removeEventListener('keyup', onKeyUp, false);
+    };
 }
 
 RTSControls.prototype = Object.create(OrbitControls.prototype);
