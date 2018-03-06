@@ -46032,7 +46032,7 @@ __WEBPACK_IMPORTED_MODULE_1_three_gltf2_loader___default()(__WEBPACK_IMPORTED_MO
 // mini-map
 const minimapStage = new __WEBPACK_IMPORTED_MODULE_3_createjs_easeljs___default.a.Stage('mapCanvas');
 const circle = new __WEBPACK_IMPORTED_MODULE_3_createjs_easeljs___default.a.Shape();
-circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 50);
+circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 2);
 circle.x = 100;
 circle.y = 100;
 minimapStage.addChild(circle);
@@ -46045,11 +46045,12 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 // Map size
-const mapSize = 1500;
+const mapSize = 250;
+const minimapSize = 200;
 
 // Init of scene camera and rendrer
 const scene = new __WEBPACK_IMPORTED_MODULE_0_three__["Scene"]();
-const camera = new __WEBPACK_IMPORTED_MODULE_0_three__["PerspectiveCamera"](75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new __WEBPACK_IMPORTED_MODULE_0_three__["PerspectiveCamera"](75, window.innerWidth / window.innerHeight, 0.1, 2000);
 // TODO: add antialiasing as an option in settings with OFF by default
 // const renderer = new THREE.WebGLRenderer({ antialias: true });
 const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["WebGLRenderer"]();
@@ -46061,15 +46062,18 @@ window.addEventListener('resize', onWindowResize, false);
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
 const boundaries = new __WEBPACK_IMPORTED_MODULE_0_three__["Box2"](
-  new __WEBPACK_IMPORTED_MODULE_0_three__["Vector2"](-100, -100),
-  new __WEBPACK_IMPORTED_MODULE_0_three__["Vector2"](100, 100)
+  new __WEBPACK_IMPORTED_MODULE_0_three__["Vector2"](0, 0),
+  new __WEBPACK_IMPORTED_MODULE_0_three__["Vector2"](mapSize, mapSize)
 );
 const controls = new __WEBPACK_IMPORTED_MODULE_4__rts_controls__["a" /* default */](camera, renderer.domElement, scene, boundaries);
 //controls.enablePan = false;
 //controls.maxDistance = 25;
 
 // skybox around map
-const skybox = __WEBPACK_IMPORTED_MODULE_5__skybox__["a" /* create */]('images/skyboxes/ame-nebula/purplenebula', mapSize);
+const skyboxSize = mapSize > 1000 ? mapSize * 2 : 3000;
+const skybox = __WEBPACK_IMPORTED_MODULE_5__skybox__["a" /* create */]('images/skyboxes/ame-nebula/purplenebula', skyboxSize);
+skybox.position.x += skyboxSize / 4;
+skybox.position.z += skyboxSize / 4;
 scene.add(skybox);
 
 // Axis helper at 0
@@ -46082,6 +46086,8 @@ scene.add(axesHelper);
 // TODO: make togable
 const helperGridSize = mapSize;
 const helperGrid = new __WEBPACK_IMPORTED_MODULE_0_three__["GridHelper"](helperGridSize, helperGridSize/10, new __WEBPACK_IMPORTED_MODULE_0_three__["Color"](0x333333), new __WEBPACK_IMPORTED_MODULE_0_three__["Color"](0x333333));
+helperGrid.position.x += helperGridSize / 2;
+helperGrid.position.z += helperGridSize / 2;
 scene.add(helperGrid);
 
 // Directional lighting so that modes and their colors\materials are visible

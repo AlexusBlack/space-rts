@@ -10,7 +10,7 @@ GLTF2Loader(THREE);
 // mini-map
 const minimapStage = new createjs.Stage('mapCanvas');
 const circle = new createjs.Shape();
-circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 50);
+circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 2);
 circle.x = 100;
 circle.y = 100;
 minimapStage.addChild(circle);
@@ -23,11 +23,12 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 // Map size
-const mapSize = 1500;
+const mapSize = 250;
+const minimapSize = 200;
 
 // Init of scene camera and rendrer
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
 // TODO: add antialiasing as an option in settings with OFF by default
 // const renderer = new THREE.WebGLRenderer({ antialias: true });
 const renderer = new THREE.WebGLRenderer();
@@ -39,15 +40,18 @@ window.addEventListener('resize', onWindowResize, false);
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
 const boundaries = new THREE.Box2(
-  new THREE.Vector2(-100, -100),
-  new THREE.Vector2(100, 100)
+  new THREE.Vector2(0, 0),
+  new THREE.Vector2(mapSize, mapSize)
 );
 const controls = new RTSControls(camera, renderer.domElement, scene, boundaries);
 //controls.enablePan = false;
 //controls.maxDistance = 25;
 
 // skybox around map
-const skybox = Skybox.create('images/skyboxes/ame-nebula/purplenebula', mapSize);
+const skyboxSize = mapSize > 1000 ? mapSize * 2 : 3000;
+const skybox = Skybox.create('images/skyboxes/ame-nebula/purplenebula', skyboxSize);
+skybox.position.x += skyboxSize / 4;
+skybox.position.z += skyboxSize / 4;
 scene.add(skybox);
 
 // Axis helper at 0
@@ -60,6 +64,8 @@ scene.add(axesHelper);
 // TODO: make togable
 const helperGridSize = mapSize;
 const helperGrid = new THREE.GridHelper(helperGridSize, helperGridSize/10, new THREE.Color(0x333333), new THREE.Color(0x333333));
+helperGrid.position.x += helperGridSize / 2;
+helperGrid.position.z += helperGridSize / 2;
 scene.add(helperGrid);
 
 // Directional lighting so that modes and their colors\materials are visible
