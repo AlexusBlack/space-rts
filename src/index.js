@@ -7,15 +7,6 @@ import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
 
-// mini-map
-const minimapStage = new createjs.Stage('mapCanvas');
-const circle = new createjs.Shape();
-circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 2);
-circle.x = 100;
-circle.y = 100;
-minimapStage.addChild(circle);
-minimapStage.update();
-
 // Screen resolution
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -25,6 +16,17 @@ function onWindowResize() {
 // Map size
 const mapSize = 250;
 const minimapSize = 200;
+const minimapRelation = minimapSize / mapSize;
+
+// mini-map
+const minimapStage = new createjs.Stage('mapCanvas');
+function minimapUpdate(ships) {
+  for(var ship of ships) {
+    ship.minimap.x = ship.position.x * minimapRelation;
+    ship.minimap.y = ship.position.z * minimapRelation;
+  }
+  minimapStage.update();
+}
 
 // Init of scene camera and rendrer
 const scene = new THREE.Scene();
@@ -56,8 +58,8 @@ scene.add(skybox);
 
 // Axis helper at 0
 // TODO: remove from later version
-const axesHelper = new THREE.AxesHelper(100);
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper(100);
+// scene.add(axesHelper);
 
 // Helper grid for navigation and edge of map
 // TODO: balance color
@@ -75,20 +77,19 @@ dirLight.position.set( 5, 5, 2).normalize();
 dirLight.lookAt(new THREE.Vector3(0, 0, 0));
 scene.add( dirLight );
 
+function addShipToMinimap(ship) {
+  const minimapCircle = new createjs.Shape();
+  minimapCircle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 2);
+  minimapCircle.x = ship.position.x * minimapRelation;
+  minimapCircle.y = ship.position.z * minimapRelation;
+  minimapStage.addChild(minimapCircle);
+  ship.minimap = minimapCircle;
+}
+
 // Loads ships on map
 // TODO: replace with unit system
 var objectLoader = new THREE.ObjectLoader();
 var ships = [];
-// JSON loader
-function addShip(type) {
-  return new Promise((resolve, reject) => {
-    objectLoader.load(`models/json/${type}.json`, function ( obj ) {
-      ships.push(obj);
-      scene.add(obj);
-      resolve(obj);
-    });
-  });
-}
 // GLTF loader, we will go with it
 var gltfLoader = new THREE.GLTFLoader();
 function addShipGLTF(type) {
@@ -98,6 +99,7 @@ function addShipGLTF(type) {
       ships.push(ship);
       scene.add(ship);
       animateShip(ship);
+      addShipToMinimap(ship);
       resolve(ship);
     });
   });
@@ -115,9 +117,9 @@ function animateShip(ship) {
 }
 
 // Some demo scene setup
-addShipGLTF('scout');
-addShipGLTF('miner').then((ship) => ship.position.x = -5);
-addShipGLTF('builder').then((ship) => ship.position.x = 5);
+addShipGLTF('scout').then((ship) => ship.position.x = 10);;
+addShipGLTF('miner').then((ship) => ship.position.x = 15);
+addShipGLTF('builder').then((ship) => ship.position.x = 20);
 
 function animate(timestamp) {
 
@@ -127,6 +129,7 @@ function animate(timestamp) {
 
   // control + render update
   controls.update();
+  minimapUpdate(ships);
 	renderer.render(scene, camera);
 }
 animate();
