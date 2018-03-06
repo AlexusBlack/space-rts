@@ -1,9 +1,12 @@
 import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
 import TWEEN from '@tweenjs/tween.js';
-// const OrbitControls = require('three-orbit-controls')(THREE);
+import createjs from 'createjs-easeljs';
 import RTSControls from './rts-controls';
 import * as Skybox from './skybox';
+
+console.log(createjs);
+
 
 GLTF2Loader(THREE);
 

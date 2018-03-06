@@ -6,5 +6,13 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, '.')
+  },
+  module: {
+    loaders: [
+      {
+        test: require.resolve('createjs-easeljs'),
+        loader: 'imports-loader?this=>window!exports-loader?window.createjs'
+      }
+    ]
   }
 };

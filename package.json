@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/AlexusBlack/space-rts#readme",
   "devDependencies": {
+    "createjs-easeljs": "0.8.2",
+    "exports-loader": "^0.7.0",
+    "imports-loader": "^0.8.0",
     "webpack": "^3.11.0"
   },
   "dependencies": {

@@ -3,6 +3,7 @@
 // DONE: Move camera on map with arrow keys and wasd
 // DONE: Method to move camera to specific 2d coordinates (x, z)
 // DONE: Option to set camera boundaries (edge of map)
+// TODO: Allow navigation with map dragging
 // TODO: Camera view area via raycaster to show on mini-map
 // TODO: Priority Low: Add simple orbiting with middle mouse button, but after it is release camera returns to standard position
 // TODO: Priority Medium: Option to switch to object orbiting mode + reset
