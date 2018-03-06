@@ -5,10 +5,16 @@ import createjs from 'createjs-easeljs';
 import RTSControls from './rts-controls';
 import * as Skybox from './skybox';
 
-console.log(createjs);
-
-
 GLTF2Loader(THREE);
+
+// mini-map
+const minimapStage = new createjs.Stage('mapCanvas');
+const circle = new createjs.Shape();
+circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 50);
+circle.x = 100;
+circle.y = 100;
+minimapStage.addChild(circle);
+minimapStage.update();
 
 // Screen resolution
 function onWindowResize() {

@@ -21,8 +21,7 @@
         z-index: 10;
     }
 
-    .jumbotron.mini-map {
-        max-width: 200px;
+    .mini-map.mini-map {
         align-self: flex-end;
         margin-top: auto;
         margin-bottom: 0;
@@ -60,8 +59,8 @@
                 </ul>
                 <button class="btn btn-secondary my-2 my-sm-0"><i class="icon ion-navicon-round"></i></button>
                 </nav>
-        <div class="mini-map jumbotron">
-            mini map here
+        <div class="mini-map alert alert-secondary">
+            <canvas id="mapCanvas" width="200" height="200"></canvas>
         </div>
     </div>
     <script src="bundle.js"></script>

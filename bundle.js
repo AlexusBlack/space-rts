@@ -46027,10 +46027,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-console.log(__WEBPACK_IMPORTED_MODULE_3_createjs_easeljs___default.a);
-
-
 __WEBPACK_IMPORTED_MODULE_1_three_gltf2_loader___default()(__WEBPACK_IMPORTED_MODULE_0_three__);
+
+// mini-map
+const minimapStage = new __WEBPACK_IMPORTED_MODULE_3_createjs_easeljs___default.a.Stage('mapCanvas');
+const circle = new __WEBPACK_IMPORTED_MODULE_3_createjs_easeljs___default.a.Shape();
+circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 50);
+circle.x = 100;
+circle.y = 100;
+minimapStage.addChild(circle);
+minimapStage.update();
 
 // Screen resolution
 function onWindowResize() {
