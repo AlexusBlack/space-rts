@@ -56,11 +56,6 @@ skybox.position.x += skyboxSize / 4;
 skybox.position.z += skyboxSize / 4;
 scene.add(skybox);
 
-// Axis helper at 0
-// TODO: remove from later version
-// const axesHelper = new THREE.AxesHelper(100);
-// scene.add(axesHelper);
-
 // Helper grid for navigation and edge of map
 // TODO: balance color
 // TODO: make togable
@@ -117,9 +112,9 @@ function animateShip(ship) {
 }
 
 // Some demo scene setup
-addShipGLTF('scout').then((ship) => ship.position.x = 10);;
-addShipGLTF('miner').then((ship) => ship.position.x = 15);
-addShipGLTF('builder').then((ship) => ship.position.x = 20);
+addShipGLTF('scout').then((ship) => ship.position.x = 10);
+addShipGLTF('miner').then((ship) => ship.position.x = 20);
+addShipGLTF('builder').then((ship) => ship.position.x = 30);
 
 function animate(timestamp) {
 
