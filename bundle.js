@@ -46051,6 +46051,26 @@ function onDocumentMouseClick(event) {
   if(intersects.length > 0) {
     const vec = intersects[0].point;
     console.log(vec);
+
+    // calculating pathfindingGrid position
+    const rowStart = Math.round(ships[0].position.z / pathfindingDensity);
+    const colStart = Math.round(ships[0].position.x / pathfindingDensity);
+
+    // calculating pathfindingGrid position
+    const row = Math.round(vec.z / pathfindingDensity);
+    const col = Math.round(vec.x / pathfindingDensity);
+    console.log(col, row);
+
+    easystar.findPath(colStart, rowStart, col, row, function(path) {
+      if (path === null) {
+        console.log('Path was not found.');
+      } else {
+        console.log('Path was found.', path);
+
+        sendShipByPath(ships[0], path);
+      }
+    });
+    easystar.calculate();
   }
 }
 
@@ -46071,6 +46091,7 @@ function minimapUpdate(ships) {
 
 // pathfinding
 const easystar = new __WEBPACK_IMPORTED_MODULE_4_easystarjs___default.a.js();
+const pathfindingDensity = 10;
 function generatePathfindingGrid(size, density, initialState) {
   const grid = [];
   for(var i = 0; i < size / density; i++) {
@@ -46082,8 +46103,11 @@ function generatePathfindingGrid(size, density, initialState) {
   }
   return grid;
 }
-const pathfindingGrid = generatePathfindingGrid(mapSize, 10, 0);
-//console.log(pathfindingGrid);
+const pathfindingGrid = generatePathfindingGrid(mapSize, pathfindingDensity, 0);
+easystar.setGrid(pathfindingGrid);
+easystar.setAcceptableTiles([0]);
+easystar.enableDiagonals();
+
 
 document.addEventListener( 'click', onDocumentMouseClick, false );
 
@@ -46159,9 +46183,10 @@ function addShipGLTF(type) {
   return new Promise((resolve, reject) => {
     gltfLoader.load(`models/gltf/${type}.gltf`, function(obj) {
       var ship = obj.scene;
+      ship.speed = 10;
       ships.push(ship);
       scene.add(ship);
-      animateShip(ship);
+      //animateShip(ship);
       addShipToMinimap(ship);
       resolve(ship);
     });
@@ -46169,7 +46194,7 @@ function addShipGLTF(type) {
 }
 
 function animateShip(ship) {
-  const speed = 10;
+  const speed = ship.speed;
   const distance = 100;
   const duration = distance / speed * 1000;
   new __WEBPACK_IMPORTED_MODULE_2__tweenjs_tween_js___default.a.Tween(ship.position)
@@ -46179,10 +46204,36 @@ function animateShip(ship) {
     .start();
 }
 
+function sendShipTo(ship, source, destination) {
+  const distance = source.distanceTo(destination);
+  const duration = distance / ship.speed * 1000;
+  return new __WEBPACK_IMPORTED_MODULE_2__tweenjs_tween_js___default.a.Tween(ship.position)
+  .to({x: destination.x, z: destination.z}, duration)
+  .easing(__WEBPACK_IMPORTED_MODULE_2__tweenjs_tween_js___default.a.Easing.Linear.None);
+}
+
+function sendShipByPath(ship, path) {
+  let firstAnimation = null;
+  let lastAnimation = null;
+  let source = ship.position;
+  for(let pathItem of path) {
+    const destination = new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](pathItem.x * pathfindingDensity, 0, pathItem.y * pathfindingDensity);
+    var animation = sendShipTo(ship, source, destination);
+    source = destination;
+    if(firstAnimation == null) {
+      firstAnimation = animation;
+    } else {
+      lastAnimation.chain(animation);
+    }
+    lastAnimation = animation;
+  }
+  firstAnimation.start();
+}
+
 // Some demo scene setup
-addShipGLTF('scout').then((ship) => ship.position.x = 10);
-addShipGLTF('miner').then((ship) => ship.position.x = 20);
-addShipGLTF('builder').then((ship) => ship.position.x = 30);
+addShipGLTF('scout');//.then((ship) => ship.position.x = 10);
+//addShipGLTF('miner').then((ship) => ship.position.x = 20);
+//addShipGLTF('builder').then((ship) => ship.position.x = 30);
 
 function animate(timestamp) {
 
