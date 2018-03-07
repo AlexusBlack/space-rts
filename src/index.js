@@ -2,10 +2,13 @@ import * as THREE from 'three';
 import GLTF2Loader from 'three-gltf2-loader';
 import TWEEN from '@tweenjs/tween.js';
 import createjs from 'createjs-easeljs';
+import EasyStar from 'easystarjs';
 import RTSControls from './rts-controls';
 import * as Skybox from './skybox';
 
 GLTF2Loader(THREE);
+
+var mousePosition = new THREE.Vector2();
 
 // Screen resolution
 function onWindowResize() {
@@ -13,6 +16,20 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+function onDocumentMouseClick(event) {
+  mousePosition.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mousePosition.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  raycaster.setFromCamera(mousePosition, camera);
+
+  const intersects = raycaster.intersectObject(level);
+
+  if(intersects.length > 0) {
+    const vec = intersects[0].point;
+    console.log(vec);
+  }
+}
+
 // Map size
 const mapSize = 250;
 const minimapSize = 200;
@@ -28,6 +45,24 @@ function minimapUpdate(ships) {
   minimapStage.update();
 }
 
+// pathfinding
+const easystar = new EasyStar.js();
+function generatePathfindingGrid(size, density, initialState) {
+  const grid = [];
+  for(var i = 0; i < size / density; i++) {
+    const line = [];
+    for(var j = 0; j < size / density; j++) {
+      line.push(initialState);
+    }
+    grid.push(line);
+  }
+  return grid;
+}
+const pathfindingGrid = generatePathfindingGrid(mapSize, 10, 0);
+//console.log(pathfindingGrid);
+
+document.addEventListener( 'click', onDocumentMouseClick, false );
+
 // Init of scene camera and rendrer
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -38,6 +73,15 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 window.addEventListener('resize', onWindowResize, false);
+const raycaster = new THREE.Raycaster();
+const levelGeometry = new THREE.PlaneGeometry(mapSize, mapSize, 4);
+const levelMaterial = new THREE.MeshBasicMaterial({color: 0xcccccc, side: THREE.DoubleSide});
+levelMaterial.visible = false;
+const level = new THREE.Mesh( levelGeometry, levelMaterial );
+level.position.x += mapSize / 2;
+level.position.z += mapSize / 2;
+level.rotation.x = Math.PI / 2;
+scene.add(level);
 
 // Initializing Orbit controls
 // TODO: Replace with custom RTS Controls
