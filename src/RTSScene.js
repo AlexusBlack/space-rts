@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import RTSControls from './RTSControls';
+import * as Skybox from './Skybox';
 
 export default class RTSScene {
     constructor(map) {
@@ -48,6 +49,10 @@ export default class RTSScene {
 
         // Loading lights from map
         this._createLights(this._scene, this._map);
+
+        // Skybox for nice background
+        const skybox = this._createSkybox(this._map);
+        this._scene.add(skybox);
     }
 
     _createLevel(size) {
@@ -79,6 +84,15 @@ export default class RTSScene {
         dirLight.lookAt(new THREE.Vector3(0, 0, 0));
 
         scene.add(dirLight);
+    }
+
+    _createSkybox(map) {
+        const skyboxSize = map.size > 1000 ? map.size * 2 : 3000;
+        const skybox = Skybox.create(`images/skyboxes/${map.skybox}/`, skyboxSize);
+        skybox.position.x += skyboxSize / 4;
+        skybox.position.z += skyboxSize / 4;
+
+        return skybox;
     }
 
     update() {
