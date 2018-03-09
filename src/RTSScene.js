@@ -54,6 +54,9 @@ export default class RTSScene {
         // Skybox for nice background
         const skybox = this._createSkybox(this._map);
         this._scene.add(skybox);
+
+        // Load map units
+        this._loadMapUnits();
     }
 
     _createLevel(size) {
@@ -94,6 +97,12 @@ export default class RTSScene {
         skybox.position.z += skyboxSize / 4;
 
         return skybox;
+    }
+
+    _loadMapUnits() {
+        for(var unit of this._map.units) {
+            this._scene.add(unit._object);
+        }
     }
 
     update() {

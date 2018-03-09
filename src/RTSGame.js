@@ -18,7 +18,6 @@ export default class RTSGame {
 
         this._players = [];
         this._map = map;
-        this._units = [];
 
         this._scene = new RTSScene(map);
     }

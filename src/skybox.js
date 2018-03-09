@@ -1,11 +1,7 @@
 import * as THREE from 'three';
 const pathToSkyboxes = require.context('./images/skyboxes/', true);
 
-// const pathToSkyboxes = require.context('./images/skyboxes', true);
-
 export function create(name, size) {
-    console.log(pathToSkyboxes);
-
     size = size || 500;
     const materialArray = [];
     materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/right.png`)) }));

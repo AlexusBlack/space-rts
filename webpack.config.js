@@ -22,9 +22,20 @@ module.exports = {
         test: /\.(jpg|png|svg)$/,
         use: [
           {
-            loader: 'file-loader?publicPath=./static/images/',
+            loader: 'file-loader',
             options: {
               outputPath: 'static/images'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(glb)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'static/models'
             }
           }
         ]
