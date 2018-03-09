@@ -18,19 +18,20 @@
   "homepage": "https://github.com/AlexusBlack/space-rts#readme",
   "devDependencies": {
     "createjs-easeljs": "0.8.2",
+    "css-loader": "^0.28.10",
     "exports-loader": "^0.7.0",
+    "html-webpack-plugin": "^3.0.6",
     "imports-loader": "^0.8.0",
+    "style-loader": "^0.20.2",
     "webpack": "^3.11.0"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^17.2.0",
-    "bootstrap": "^4.0.0",
     "easystarjs": "^0.4.3",
+    "file-loader": "^1.1.11",
     "ionicons-npm": "^2.0.1",
-    "jquery": "^3.3.1",
     "keycode": "^2.1.9",
     "npm": "^5.7.1",
-    "popper.js": "^1.12.9",
     "three": "^0.90.0",
     "three-gltf2-loader": "^1.2.0",
     "three-orbit-controls": "^82.1.0"

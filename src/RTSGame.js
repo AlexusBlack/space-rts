@@ -7,6 +7,7 @@ import MapException from './Exceptions/MapException';
 import GameState from './Enums/GameState';
 
 /* Classes */
+import RTSUI from './RTSUI';
 import RTSScene from './RTSScene';
 
 export default class RTSGame {

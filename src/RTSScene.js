@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import RTSControls from './RTSControls';
 import * as Skybox from './Skybox';
 
+
 export default class RTSScene {
     constructor(map) {
         if(map == null) throw new MapException('Map is required to init scene');
@@ -88,7 +89,7 @@ export default class RTSScene {
 
     _createSkybox(map) {
         const skyboxSize = map.size > 1000 ? map.size * 2 : 3000;
-        const skybox = Skybox.create(`images/skyboxes/${map.skybox}/`, skyboxSize);
+        const skybox = Skybox.create(map.skybox, skyboxSize);
         skybox.position.x += skyboxSize / 4;
         skybox.position.z += skyboxSize / 4;
 

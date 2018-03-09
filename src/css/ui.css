@@ -1,0 +1,26 @@
+.ui-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.mini-map.mini-map {
+    align-self: flex-end;
+    margin-top: auto;
+    margin-bottom: 0;
+    padding: 5px;
+}
+
+.mini-map canvas {
+    background-color: rgba(0,0,0, 0.7);
+}
+
+.navbar.resources-panel {
+    pointer-events: initial;
+}
+.navbar .resources-list .nav-link {
+    color: white;
+}

@@ -1,14 +1,19 @@
 import * as THREE from 'three';
+const pathToSkyboxes = require.context('./images/skyboxes/', true);
 
-export function create(path, size) {
+// const pathToSkyboxes = require.context('./images/skyboxes', true);
+
+export function create(name, size) {
+    console.log(pathToSkyboxes);
+
     size = size || 500;
     const materialArray = [];
-    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(`${path}right.png`) }));
-    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(`${path}left.png`) }));
-    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(`${path}up.png`) }));
-    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(`${path}down.png`) }));
-    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(`${path}front.png`) }));
-    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(`${path}back.png`) }));
+    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/right.png`)) }));
+    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/left.png`)) }));
+    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/up.png`)) }));
+    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/down.png`)) }));
+    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/front.png`)) }));
+    materialArray.push(new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load(pathToSkyboxes(`./${name}/back.png`)) }));
     for (let i = 0; i < 6; i++)
         materialArray[i].side = THREE.BackSide;
 
