@@ -68,9 +68,9 @@ export default class RTSScene {
         return helperGrid;
     }
 
-    update() {
+    update(secondFraction) {
         this._renderer.render(this._scene, this._camera);
         this._controls.update();
-        this._map.update();
+        this._map.update(secondFraction);
     }
 }

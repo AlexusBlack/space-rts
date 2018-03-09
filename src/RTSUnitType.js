@@ -14,6 +14,7 @@ export default class RTSUnitType {
      */
     constructor(modelName) {
         this.modelName = modelName;
+        this.speed = 1;
     }
 
     /** 

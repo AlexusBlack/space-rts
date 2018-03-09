@@ -9,5 +9,6 @@ export default class RTSUnitCommand {
         this.type = type;
         this.destination = null;
         this.target = null;
+        this.complete = false;
     }
 }

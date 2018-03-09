@@ -47,9 +47,9 @@ export default class RTSMap {
         }
     }
 
-    update() {
+    update(secondFraction) {
         for(var unit of this.units) {
-            unit.update();
+            unit.update(secondFraction);
         }
     }
 }
