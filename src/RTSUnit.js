@@ -32,7 +32,12 @@ export default class RTSUnit {
             await this._setupCommand(this._currentCommand);
         }
         if(this._currentCommand != null) {
-            this._executeCommand(this._currentCommand, secondFraction);
+            if(this._currentCommand.complete) {
+                this._currentCommand = null;
+                console.log('Command complete');
+            } else {
+                this._executeCommand(this._currentCommand, secondFraction);
+            }
         }
     }
 
