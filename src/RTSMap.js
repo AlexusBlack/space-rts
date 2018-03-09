@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as Skybox from './Skybox';
+import * as Skybox from './Libraries/Skybox';
 
 export default class RTSMap {
     constructor(size) {
@@ -40,6 +40,12 @@ export default class RTSMap {
     _loadMapUnits(scene) {
         for(var unit of this.units) {
             scene.add(unit._object);
+        }
+    }
+
+    update() {
+        for(var unit of this.units) {
+            unit.update();
         }
     }
 }

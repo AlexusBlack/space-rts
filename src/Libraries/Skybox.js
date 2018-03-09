@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-const pathToSkyboxes = require.context('./images/skyboxes/', true);
+const pathToSkyboxes = require.context('../images/skyboxes/', true);
 
 export function create(name, size) {
     size = size || 500;
