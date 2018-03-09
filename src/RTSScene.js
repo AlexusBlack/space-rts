@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import RTSControls from './RTSControls';
-import * as Skybox from './Skybox';
 
 
 export default class RTSScene {
@@ -28,7 +27,14 @@ export default class RTSScene {
         );
         this._controls = new RTSControls(this._camera, this._renderer.domElement, this._scene, boundaries);
 
-        this._loadMap();
+        // Adding level mesh to calculate click raycasts
+        this._level = this._createLevel(this._map.size);
+        this._scene.add(this._level);
+
+        // Helper grid for navigation and edge of map
+        this._scene.add(this._createHelperGrid(this._map.size));
+
+        this._map.initialize(this._scene);
 
         // Handling window resize event
         window.addEventListener('resize', this.onWindowResize, false);
@@ -38,25 +44,6 @@ export default class RTSScene {
         this._camera.aspect = window.innerWidth / window.innerHeight;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    _loadMap() {
-        // Adding level mesh to calculate click raycasts
-        this._level = this._createLevel(this._map.size);
-        this._scene.add(this._level);
-
-        // Helper grid for navigation and edge of map
-        this._scene.add(this._createHelperGrid(this._map.size));
-
-        // Loading lights from map
-        this._createLights(this._scene, this._map);
-
-        // Skybox for nice background
-        const skybox = this._createSkybox(this._map);
-        this._scene.add(skybox);
-
-        // Load map units
-        this._loadMapUnits();
     }
 
     _createLevel(size) {
@@ -79,30 +66,6 @@ export default class RTSScene {
         helperGrid.position.z += size / 2;
 
         return helperGrid;
-    }
-
-    _createLights(scene, map) {
-        // TODO: load lights from scene
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-        dirLight.position.set(5, 5, 2).normalize();
-        dirLight.lookAt(new THREE.Vector3(0, 0, 0));
-
-        scene.add(dirLight);
-    }
-
-    _createSkybox(map) {
-        const skyboxSize = map.size > 1000 ? map.size * 2 : 3000;
-        const skybox = Skybox.create(map.skybox, skyboxSize);
-        skybox.position.x += skyboxSize / 4;
-        skybox.position.z += skyboxSize / 4;
-
-        return skybox;
-    }
-
-    _loadMapUnits() {
-        for(var unit of this._map.units) {
-            this._scene.add(unit._object);
-        }
     }
 
     update() {
