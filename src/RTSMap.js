@@ -1,11 +1,14 @@
 import * as THREE from 'three';
 import * as Skybox from './Libraries/Skybox';
+import RTSPathfinder from './RTSPathfinder';
 
 export default class RTSMap {
     constructor(size) {
         this.units = [];
         this.size = size || 250;
         this.skybox = 'ame-nebula';
+
+        this._pathfinder = new RTSPathfinder(this, 2, [0]);
     }
 
     initialize(scene) {
@@ -39,6 +42,7 @@ export default class RTSMap {
 
     _loadMapUnits(scene) {
         for(var unit of this.units) {
+            unit.setPathfinder(this._pathfinder);
             scene.add(unit._object);
         }
     }
