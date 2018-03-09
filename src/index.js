@@ -25,6 +25,10 @@ import RTSUnitCommandType from './Enums/RTSUnitCommandType';
     command.destination = new THREE.Vector3(27, 0, 29);
     scout_1.commands.push(command);
 
+    const command2 = new RTSUnitCommand(RTSUnitCommandType.Move);
+    command2.destination = new THREE.Vector3(100, 0, 150);
+    scout_1.commands.push(command2);
+
     const game = new RTSGame(map);
     game.start();
 })();

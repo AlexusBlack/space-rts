@@ -27,7 +27,7 @@ export default class RTSUnit {
 
     async update(secondFraction) {
         if(this._currentCommand == null && this.commands.length > 0) {
-            this._currentCommand = this.commands.pop();
+            this._currentCommand = this.commands.shift();
             console.log('New Command: ', this._currentCommand);
             await this._setupCommand(this._currentCommand);
         }
