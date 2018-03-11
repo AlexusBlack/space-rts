@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as Skybox from './Libraries/Skybox';
-import RTSPathfinder from './RTSPathfinder';
+import RTSPathfinder from './RTSGridPathfinder';
 
 export default class RTSMap {
     constructor(size) {

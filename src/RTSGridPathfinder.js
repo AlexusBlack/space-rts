@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import EasyStar from 'easystarjs';
-import RTSPathfinderTile from './RTSPathfinderTile';
+import RTSPathfinderTile from './RTSGridPathfinderTile';
 
 export default class RTSPathfinder {
     constructor(map, density, movableTileTypes) {
