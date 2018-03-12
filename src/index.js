@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+window.THREE = THREE;
 import RTSGame from './RTSGame';
 import RTSMap from './RTSMap';
 import RTSUnitType from './RTSUnitType';
@@ -22,11 +23,11 @@ import RTSUnitCommandType from './Enums/RTSUnitCommandType';
     map.units.push(scout_2);
 
     const command = new RTSUnitCommand(RTSUnitCommandType.Move);
-    command.destination = new THREE.Vector3(27, 0, 29);
+    command.destination = new THREE.Vector3(150, 0, 15);
     scout_1.commands.push(command);
 
     const command2 = new RTSUnitCommand(RTSUnitCommandType.Move);
-    command2.destination = new THREE.Vector3(100, 0, 150);
+    command2.destination = new THREE.Vector3(10, 0, 150);
     scout_1.commands.push(command2);
 
     const game = new RTSGame(map);

@@ -26,19 +26,19 @@ export default class RTSUnit {
     }
 
     async update(secondFraction) {
-        if(this._currentCommand == null && this.commands.length > 0) {
-            this._currentCommand = this.commands.shift();
-            console.log('New Command: ', this._currentCommand);
-            await this._setupCommand(this._currentCommand);
-        }
-        if(this._currentCommand != null) {
+        if(this._currentCommand != null && this._currentCommand.setupFinished) {
             if(this._currentCommand.complete) {
                 this._currentCommand = null;
                 console.log('Command complete');
             } else {
                 this._executeCommand(this._currentCommand, secondFraction);
             }
+        } else if(this._currentCommand == null && this.commands.length > 0) {
+            this._currentCommand = this.commands.shift();
+            console.log('New Command: ', this._currentCommand);
+            await this._setupCommand(this._currentCommand);
         }
+        
     }
 
     async _setupCommand(command) {
@@ -51,7 +51,7 @@ export default class RTSUnit {
         if(this._pathfinder == null) new UnitException('Pathfinder required fro Move command');
         const path = await this._pathfinder.calculatePath(this.position, command.destination);
         command._path = path;
-        console.log(path);
+        command.setupFinished = true;
     }
 
     _executeCommand(command, secondFraction) {

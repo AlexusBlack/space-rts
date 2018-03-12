@@ -28,13 +28,13 @@ export default class RTSScene {
         this._controls = new RTSControls(this._camera, this._renderer.domElement, this._scene, boundaries);
 
         // Adding level mesh to calculate click raycasts
-        this._level = this._createLevel(this._map.size);
-        this._scene.add(this._level);
+        this.level = this._createLevel(this._map.size);
+        this._scene.add(this.level);
 
         // Helper grid for navigation and edge of map
         this._scene.add(this._createHelperGrid(this._map.size));
 
-        this._map.initialize(this._scene);
+        this._map.initialize(this._scene, this.level);
 
         // Handling window resize event
         window.addEventListener('resize', this.onWindowResize, false);
@@ -48,13 +48,17 @@ export default class RTSScene {
 
     _createLevel(size) {
         // Adding level mesh to calculate click raycasts
-        const levelGeometry = new THREE.PlaneGeometry(size, size, 4);
-        const levelMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide});
-        levelMaterial.visible = false;
+        const levelGeometry = new THREE.PlaneGeometry(size, size, 16);
+        levelGeometry.rotateX(Math.PI / 2);
+        levelGeometry.translate(size / 2, 0, size / 2);
+        const levelMaterial = new THREE.MeshBasicMaterial({color: 0x00bfff, side: THREE.DoubleSide});
+        levelMaterial.visible = true;
+        levelMaterial.transparent = true;
+        levelMaterial.opacity = 0.1;
         const level = new THREE.Mesh(levelGeometry, levelMaterial );
-        level.position.x += size / 2;
-        level.position.z += size / 2;
-        level.rotation.x = Math.PI / 2;
+        // level.position.x += size / 2;
+        // level.position.z += size / 2;
+        // level.rotation.x = Math.PI / 2;
 
         return level;
     }

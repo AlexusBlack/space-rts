@@ -1,17 +1,19 @@
 import * as THREE from 'three';
 import * as Skybox from './Libraries/Skybox';
 import RTSPathfinder from './RTSGridPathfinder';
+// import RTSPathfinder from './RTSMeshPathfinder';
 
 export default class RTSMap {
     constructor(size) {
         this.units = [];
         this.size = size || 250;
         this.skybox = 'ame-nebula';
-
-        this._pathfinder = new RTSPathfinder(this, 2, [0]);
     }
 
-    initialize(scene) {
+    initialize(scene, level) {
+        this.level = level;
+        this._pathfinder = new RTSPathfinder(this, 2, [0]);
+
         // Loading lights from map
         this._createLights(scene);
 
