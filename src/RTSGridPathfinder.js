@@ -72,9 +72,9 @@ export default class RTSPathfinder {
 
     _gridToMap(tile) {
         return new THREE.Vector3(
-            tile.x * this.density,
+            tile.x * this.density - this.density / 2,
             0,
-            tile.y * this.density
+            tile.y * this.density - this.density / 2
         );
     }
 
