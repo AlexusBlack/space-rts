@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import * as Skybox from './Libraries/Skybox';
 import RTSPathfinder from './RTSGridPathfinder';
+import RTSPathVisualizer from './RTSPathVisualizer';
 // import RTSPathfinder from './RTSMeshPathfinder';
 
 export default class RTSMap {
@@ -13,7 +14,9 @@ export default class RTSMap {
 
     initialize(scene, level) {
         this.level = level;
+        const pathVisualizer = new RTSPathVisualizer(scene);
         this._pathfinder = new RTSPathfinder(this, 5, [0]);
+        this._pathfinder.enableVisualization(pathVisualizer);
 
         // Loading lights from map
         this._createLights(scene);

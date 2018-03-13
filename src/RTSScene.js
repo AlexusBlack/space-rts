@@ -53,7 +53,7 @@ export default class RTSScene {
         levelGeometry.rotateX(Math.PI / 2);
         levelGeometry.translate(size / 2, 0, size / 2);
         const levelMaterial = new THREE.MeshBasicMaterial({color: 0x00bfff, side: THREE.DoubleSide});
-        levelMaterial.visible = true;
+        levelMaterial.visible = false;
         levelMaterial.transparent = true;
         levelMaterial.opacity = 0.1;
         const level = new THREE.Mesh(levelGeometry, levelMaterial );
