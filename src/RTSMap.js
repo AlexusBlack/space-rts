@@ -12,7 +12,7 @@ export default class RTSMap {
 
     initialize(scene, level) {
         this.level = level;
-        this._pathfinder = new RTSPathfinder(this, 2, [0]);
+        this._pathfinder = new RTSPathfinder(this, 5, [0]);
 
         // Loading lights from map
         this._createLights(scene);

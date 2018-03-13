@@ -9,8 +9,13 @@ export default class RTSUnit {
      */
     constructor(type) {
         this.type = type;
-        this._object = type.model.clone();
+
+        this._pointOfOrigin = new THREE.Object3D();
+        this._model = type.model.clone();
+        this._pointOfOrigin.add(this._model);
+        this._object = this._pointOfOrigin;
         this.position = this._object.position;
+        this.rotation = this._object.rotation;
 
         this.commands = [];
         this._currentCommand = null;
@@ -19,6 +24,36 @@ export default class RTSUnit {
 
     setPathfinder(pathfinder) {
         this._pathfinder = pathfinder;
+    }
+
+    moveOrigin(delta) {
+        this._pointOfOrigin.position.add(delta);
+        this._model.position.sub(delta);
+    }
+
+    _rotateAroundPoint(point, angle) {
+        // saving our unit container
+        const oldParent = this._object.parent;
+
+        // creating point of origin to rotate around
+        const pointOfOrigin = new THREE.Object3D();
+        
+        // adding point of origin to unit container
+        oldParent.add(pointOfOrigin);
+
+        // moving point of origin to requested position
+        pointOfOrigin.position.x = point.x;
+        pointOfOrigin.position.y = point.y;
+        pointOfOrigin.position.z = point.z;
+
+        // calculating unit position in context of origin point
+        const newUnitPosition = (new THREE.Vector3()).subVectors(this._object.position, pointOfOrigin.position);
+        this._object.position.copy(newUnitPosition);
+
+        // attaching out unit to point of origin
+        pointOfOrigin.add(this._object);
+
+        return pointOfOrigin;
     }
 
     cancelCommand() {
@@ -63,6 +98,8 @@ export default class RTSUnit {
     _executeMoveCommand(command, secondFraction) {
         if(command._path.length > 0) {
             const targetPosition = command._path[0];
+            this._object.lookAt(targetPosition);
+            // console.log(targetPosition);
             const vel = targetPosition.clone().sub(this.position);
 
             if (vel.lengthSq() > 0.05 * 0.05) {

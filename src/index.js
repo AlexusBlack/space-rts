@@ -22,13 +22,17 @@ import RTSUnitCommandType from './Enums/RTSUnitCommandType';
     scout_2.position.z = 10;
     map.units.push(scout_2);
 
-    const command = new RTSUnitCommand(RTSUnitCommandType.Move);
-    command.destination = new THREE.Vector3(150, 0, 15);
-    scout_1.commands.push(command);
+    window.scout1 = scout_1;
+    window.scout2 = scout_2;
+    // console.log(scout_2);
 
-    const command2 = new RTSUnitCommand(RTSUnitCommandType.Move);
-    command2.destination = new THREE.Vector3(10, 0, 150);
-    scout_1.commands.push(command2);
+    // const command = new RTSUnitCommand(RTSUnitCommandType.Move);
+    // command.destination = new THREE.Vector3(150, 0, 15);
+    // scout_1.commands.push(command);
+
+    // const command2 = new RTSUnitCommand(RTSUnitCommandType.Move);
+    // command2.destination = new THREE.Vector3(10, 0, 150);
+    // scout_1.commands.push(command2);
 
     const game = new RTSGame(map);
     game.start();
