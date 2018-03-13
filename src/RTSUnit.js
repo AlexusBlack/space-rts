@@ -31,6 +31,11 @@ export default class RTSUnit {
         this._model.position.sub(delta);
     }
 
+    resetOrigin() {
+        this._model.getWorldPosition(this._pointOfOrigin.position);
+        this._model.position.set(0,0,0);
+    }
+
     _rotateAroundPoint(point, angle) {
         // saving our unit container
         const oldParent = this._object.parent;
