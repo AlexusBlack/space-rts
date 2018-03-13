@@ -8,6 +8,7 @@ export default class RTSMap {
         this.units = [];
         this.size = size || 250;
         this.skybox = 'ame-nebula';
+        this.cameraPostion = new THREE.Vector3(30, 0, 30);
     }
 
     initialize(scene, level) {

@@ -20,6 +20,7 @@ export default class RTSUnit {
         this.commands = [];
         this._currentCommand = null;
         this._pathfinder = null;
+
     }
 
     setPathfinder(pathfinder) {
@@ -36,36 +37,14 @@ export default class RTSUnit {
         this._model.position.set(0,0,0);
     }
 
-    _rotateAroundPoint(point, angle) {
-        // saving our unit container
-        const oldParent = this._object.parent;
-
-        // creating point of origin to rotate around
-        const pointOfOrigin = new THREE.Object3D();
-        
-        // adding point of origin to unit container
-        oldParent.add(pointOfOrigin);
-
-        // moving point of origin to requested position
-        pointOfOrigin.position.x = point.x;
-        pointOfOrigin.position.y = point.y;
-        pointOfOrigin.position.z = point.z;
-
-        // calculating unit position in context of origin point
-        const newUnitPosition = (new THREE.Vector3()).subVectors(this._object.position, pointOfOrigin.position);
-        this._object.position.copy(newUnitPosition);
-
-        // attaching out unit to point of origin
-        pointOfOrigin.add(this._object);
-
-        return pointOfOrigin;
-    }
-
     cancelCommand() {
         this._currentCommand = null;
     }
 
     async update(secondFraction) {
+
+        this.rotation.y += this.type.angularSpeed * secondFraction;
+
         if(this._currentCommand != null && this._currentCommand.setupFinished) {
             if(this._currentCommand.complete) {
                 this._currentCommand = null;

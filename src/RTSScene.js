@@ -26,6 +26,7 @@ export default class RTSScene {
             new THREE.Vector2(map.size, map.size)
         );
         this._controls = new RTSControls(this._camera, this._renderer.domElement, this._scene, boundaries);
+        this._controls.position.copy(map.cameraPostion);
 
         // Adding level mesh to calculate click raycasts
         this.level = this._createLevel(this._map.size);
