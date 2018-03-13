@@ -27,9 +27,10 @@ export default class RTSPathfinder {
 
     _generatePathfindingGrid(size, density, initialState) {
         const grid = [];
-        for(var i = 0; i < size / density; i++) {
+        const gridSize = size / density;
+        for(var i = 0; i < gridSize; i++) {
             const line = [];
-            for(var j = 0; j < size / density; j++) {
+            for(var j = 0; j < gridSize; j++) {
                 line.push(initialState);
             }
             grid.push(line);

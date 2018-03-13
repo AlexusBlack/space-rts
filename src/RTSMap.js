@@ -14,8 +14,9 @@ export default class RTSMap {
 
     initialize(scene, level) {
         this.level = level;
-        const pathVisualizer = new RTSPathVisualizer(scene);
-        this._pathfinder = new RTSPathfinder(this, 5, [0]);
+        const gridDensity = 5;
+        const pathVisualizer = new RTSPathVisualizer(scene, this.size, gridDensity);
+        this._pathfinder = new RTSPathfinder(this, gridDensity, [0]);
         this._pathfinder.enableVisualization(pathVisualizer);
 
         // Loading lights from map

@@ -1,11 +1,22 @@
 export default class RTSPathVisualizer {
-    constructor(scene) {
+    constructor(scene, size, density) {
         this._scene = scene;
+        this._size = size;
+        this._density = density;
+
+        this._visualizeGrid();
     }
 
     visualize(gridPath, mapPath) {
         console.log(gridPath, mapPath);
         this._visualizeMapPath(mapPath);
+    }
+
+    _visualizeGrid() {
+        const navigationGrid = new THREE.GridHelper(this._size, this._size/this._density, new THREE.Color(0x18dd11), new THREE.Color(0x18dd11));
+        navigationGrid.position.x += this._size / 2;
+        navigationGrid.position.z += this._size / 2;
+        this._scene.add(navigationGrid);
     }
 
     _visualizeMapPath(mapPath) {
@@ -26,7 +37,7 @@ export default class RTSPathVisualizer {
         const debugPath = [mapPath[0]].concat(mapPath);
 
         for (let i = 0; i < debugPath.length - 1; i++) {
-            const boxGeometry = new THREE.BoxGeometry( 0.3, 0.3, 0.3 );
+            const boxGeometry = new THREE.BoxGeometry( 0.5, 0.5, 0.5 );
             const boxMaterial = new THREE.MeshBasicMaterial( {color: 0x00ffff} );
             const node = new THREE.Mesh(boxGeometry, boxMaterial);
             node.position.copy(debugPath[i]);
