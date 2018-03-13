@@ -43,7 +43,7 @@ export default class RTSUnit {
 
     async update(secondFraction) {
 
-        this.rotation.y += this.type.angularSpeed * secondFraction;
+        //this.rotation.y += this.type.angularSpeed * secondFraction;
 
         if(this._currentCommand != null && this._currentCommand.setupFinished) {
             if(this._currentCommand.complete) {

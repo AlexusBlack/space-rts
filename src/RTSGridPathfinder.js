@@ -6,6 +6,8 @@ export default class RTSPathfinder {
     constructor(map, density, movableTileTypes) {
         this._map = map;
         this.density = density;
+        this._visualize = false;
+        this._pathVisualizer = null;
 
         const grid = this._generatePathfindingGrid(this._map.size, density, movableTileTypes[0]);
         
@@ -13,6 +15,14 @@ export default class RTSPathfinder {
         this._pathfinder.setGrid(grid);
         this._pathfinder.setAcceptableTiles(movableTileTypes);
         this._pathfinder.enableDiagonals();
+    }
+
+    enableVisualization(pathVisualizer) {
+        this._visualize = true;
+        this._pathVisualizer = pathVisualizer;
+    }
+    disableVisualization() {
+        this._visualize = false;
     }
 
     _generatePathfindingGrid(size, density, initialState) {
@@ -33,6 +43,10 @@ export default class RTSPathfinder {
         const gridPath = await this._calculateGridPath(gridSource, gridDestination);
         const mapPath = this._gridPathToMapPath(gridPath);
         mapPath.push(mapDestination);
+
+        if(this._visualize) {
+            this._pathVisualizer.visualize(gridPath, mapPath);
+        }
 
         return mapPath;
     }

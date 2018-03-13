@@ -24,13 +24,13 @@ import RTSUnitCommandType from './Enums/RTSUnitCommandType';
 
     window.scout1 = scout_1;
 
-    scout_1.moveOrigin(new THREE.Vector3(10,0,0));
+    //scout_1.moveOrigin(new THREE.Vector3(10,0,0));
     // window.scout2 = scout_2;
     // console.log(scout_2);
 
-    // const command = new RTSUnitCommand(RTSUnitCommandType.Move);
-    // command.destination = new THREE.Vector3(150, 0, 15);
-    // scout_1.commands.push(command);
+    const command = new RTSUnitCommand(RTSUnitCommandType.Move);
+    command.destination = new THREE.Vector3(150, 0, 15);
+    scout_1.commands.push(command);
 
     // const command2 = new RTSUnitCommand(RTSUnitCommandType.Move);
     // command2.destination = new THREE.Vector3(10, 0, 150);
