@@ -10,6 +10,7 @@ export default class RTSPathVisualizer {
     visualize(gridPath, mapPath) {
         console.log(gridPath, mapPath);
         this._visualizeMapPath(mapPath);
+        this._visualizeGridPath(gridPath);
     }
 
     _visualizeGrid() {
@@ -17,6 +18,21 @@ export default class RTSPathVisualizer {
         navigationGrid.position.x += this._size / 2;
         navigationGrid.position.z += this._size / 2;
         this._scene.add(navigationGrid);
+    }
+
+    _visualizeGridPath(gridPath) {
+        for(let i = 0; i < gridPath.length; i++) {
+            const tileGeometry = new THREE.PlaneGeometry(this._density, this._density, 4);
+            const tileMaterial = new THREE.MeshBasicMaterial({color: 0x18dd11, side: THREE.DoubleSide});
+            tileMaterial.transparent = true;
+            tileMaterial.opacity = 0.3;
+            const tile = new THREE.Mesh(tileGeometry, tileMaterial);
+            tile.rotation.x = Math.PI / 2;
+            tile.position.x = gridPath[i].x * this._density - this._density / 2;
+            tile.position.z = gridPath[i].y * this._density - this._density / 2;
+            
+            this._scene.add(tile);
+        }
     }
 
     _visualizeMapPath(mapPath) {
