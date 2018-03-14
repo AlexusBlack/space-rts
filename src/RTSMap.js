@@ -15,8 +15,10 @@ export default class RTSMap {
     initialize(scene, level) {
         this.level = level;
         const gridDensity = 5;
-        const pathVisualizer = new RTSPathVisualizer(scene, this.size, gridDensity);
-        this._pathfinder = new RTSPathfinder(this, gridDensity, [0]);
+        const walkableTileTypes = [0];
+        this._pathfinder = new RTSPathfinder(this, gridDensity, walkableTileTypes);
+        this._pathfinder.setArea(new THREE.Vector3(70,0,10), new THREE.Vector3(80,0,40), 1);
+        const pathVisualizer = new RTSPathVisualizer(scene, this.size, gridDensity, this._pathfinder.grid, walkableTileTypes);
         this._pathfinder.enableVisualization(pathVisualizer);
 
         // Loading lights from map

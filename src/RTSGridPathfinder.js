@@ -10,10 +10,10 @@ export default class RTSPathfinder {
         this._visualize = false;
         this._pathVisualizer = null;
 
-        this._grid = this._generatePathfindingGrid(this._map.size, density, walkableTileTypes[0]);
+        this.grid = this._generatePathfindingGrid(this._map.size, density, walkableTileTypes[0]);
         
         this._pathfinder = new EasyStar.js();
-        this._pathfinder.setGrid(this._grid);
+        this._pathfinder.setGrid(this.grid);
         this._pathfinder.setAcceptableTiles(walkableTileTypes);
         this._pathfinder.enableDiagonals();
         
@@ -27,6 +27,17 @@ export default class RTSPathfinder {
     
     disableVisualization() {
         this._visualize = false;
+    }
+
+    setArea(mapSource, mapDestination, value) {
+        const gridSource = this._mapToGrid(mapSource);
+        const gridDestination = this._mapToGrid(mapDestination);
+
+        for(let x = gridSource.x; x <= gridDestination.x; x++) {
+            for(let y = gridSource.y; y <= gridDestination.y; y++) {
+                this.grid[x][y] = value;
+            }
+        }
     }
     
     async calculatePath(mapSource, mapDestination) {
@@ -97,7 +108,7 @@ export default class RTSPathfinder {
     }
 
     _isWalkableAt(x, y) {
-        const tileType = this._grid[x, y];
+        const tileType = this.grid[x, y];
         return this._walkableTileTypes.includes(tileType);
     }
 

@@ -1,8 +1,10 @@
 export default class RTSPathVisualizer {
-    constructor(scene, size, density) {
+    constructor(scene, size, density, grid, walkableTileTypes) {
         this._scene = scene;
         this._size = size;
         this._density = density;
+        this._grid = grid;
+        this._walkableTileTypes = walkableTileTypes;
 
         this._visualizeGrid();
     }
@@ -18,6 +20,25 @@ export default class RTSPathVisualizer {
         navigationGrid.position.x += this._size / 2;
         navigationGrid.position.z += this._size / 2;
         this._scene.add(navigationGrid);
+
+        // marking all non-walkable tiles
+        for(let x = 0; x < this._grid.length; x++) {
+            for(let y = 0; y < this._grid[x].length; y++) {
+                if(!this._walkableTileTypes.includes(this._grid[x][y])) {
+                    //console.log(`${x},${y}: not walkable`);
+                    const tileGeometry = new THREE.PlaneGeometry(this._density, this._density, 4);
+                    const tileMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});
+                    tileMaterial.transparent = true;
+                    tileMaterial.opacity = 0.3;
+                    const tile = new THREE.Mesh(tileGeometry, tileMaterial);
+                    tile.rotation.x = Math.PI / 2;
+                    tile.position.x = x * this._density - this._density / 2;
+                    tile.position.z = y * this._density - this._density / 2;
+                    
+                    this._scene.add(tile);
+                }
+            }
+        }
     }
 
     _visualizeGridPath(gridPath) {
