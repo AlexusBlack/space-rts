@@ -16,17 +16,68 @@ export default class RTSPathfinder {
         this._pathfinder.setGrid(this._grid);
         this._pathfinder.setAcceptableTiles(walkableTileTypes);
         this._pathfinder.enableDiagonals();
-
+        
         window.rtsGridPathfinder = this;
     }
-
+    
     enableVisualization(pathVisualizer) {
         this._visualize = true;
         this._pathVisualizer = pathVisualizer;
     }
-
+    
     disableVisualization() {
         this._visualize = false;
+    }
+    
+    async calculatePath(mapSource, mapDestination) {
+        const gridSource = this._mapToGrid(mapSource);
+        const gridDestination = this._mapToGrid(mapDestination);
+        const gridPath = await this._calculateGridPath(gridSource, gridDestination);
+        const smoothedGridPath = this._smoothGridPath(gridPath);
+        const mapPath = this._gridPathToMapPath(smoothedGridPath);
+        mapPath.push(mapDestination);
+
+        if(this._visualize) {
+            this._pathVisualizer.visualize(gridPath, mapPath);
+        }
+
+        return mapPath;
+    }
+
+    _calculateGridPath(gridSource, gridDestination) {
+        return new Promise((resolve, reject) => {
+            this._pathfinder.findPath(
+                gridSource.x, gridSource.y, 
+                gridDestination.x, gridDestination.y, 
+                (path) => resolve(path)
+            );
+            this._pathfinder.calculate();
+        });
+    }
+
+    _smoothGridPath(path) {
+        const newPath = [];
+
+        let startPoint = path[0];
+        // we need our start point in path without doubt
+        newPath.push(startPoint);
+        for(let i = 1; i < path.length; i++) {
+            let pathItem = path[i];
+            // if we reached last item of path just adding it to new path 
+            if(i == path.length - 1) {
+                newPath.push(pathItem);
+                break;
+            }
+
+            let nextPathItem = path[i + 1];
+            // if we can get to next item without intermeediate point, skipping it
+            if(!this._isWalkable(startPoint, nextPathItem)) {
+                newPath.push(pathItem);
+                startPoint = pathItem;
+            }
+        }
+
+        return newPath;
     }
 
     _isWalkable(gridSource, gridDestination) {
@@ -107,30 +158,8 @@ export default class RTSPathfinder {
         return grid;
     }
 
-    async calculatePath(mapSource, mapDestination) {
-        const gridSource = this._mapToGrid(mapSource);
-        const gridDestination = this._mapToGrid(mapDestination);
-        const gridPath = await this._calculateGridPath(gridSource, gridDestination);
-        const mapPath = this._gridPathToMapPath(gridPath);
-        mapPath.push(mapDestination);
 
-        if(this._visualize) {
-            this._pathVisualizer.visualize(gridPath, mapPath);
-        }
-
-        return mapPath;
-    }
-
-    _calculateGridPath(gridSource, gridDestination) {
-        return new Promise((resolve, reject) => {
-            this._pathfinder.findPath(
-                gridSource.x, gridSource.y, 
-                gridDestination.x, gridDestination.y, 
-                (path) => resolve(path)
-            );
-            this._pathfinder.calculate();
-        });
-    }
+    
 
     _mapToGrid(vector) {
         return new RTSPathfinderTile(
