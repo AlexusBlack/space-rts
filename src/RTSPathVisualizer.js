@@ -32,8 +32,8 @@ export default class RTSPathVisualizer {
                     tileMaterial.opacity = 0.3;
                     const tile = new THREE.Mesh(tileGeometry, tileMaterial);
                     tile.rotation.x = Math.PI / 2;
-                    tile.position.x = x * this._density - this._density / 2;
-                    tile.position.z = y * this._density - this._density / 2;
+                    tile.position.x = x * this._density + this._density / 2;
+                    tile.position.z = y * this._density + this._density / 2;
                     
                     this._scene.add(tile);
                 }
@@ -49,8 +49,8 @@ export default class RTSPathVisualizer {
             tileMaterial.opacity = 0.3;
             const tile = new THREE.Mesh(tileGeometry, tileMaterial);
             tile.rotation.x = Math.PI / 2;
-            tile.position.x = gridPath[i].x * this._density - this._density / 2;
-            tile.position.z = gridPath[i].y * this._density - this._density / 2;
+            tile.position.x = gridPath[i].x * this._density + this._density / 2;
+            tile.position.z = gridPath[i].y * this._density + this._density / 2;
             
             this._scene.add(tile);
         }
