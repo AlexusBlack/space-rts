@@ -96,12 +96,12 @@ export default class RTSPathfinder {
     _isWalkable(gridSource, gridDestination) {
         const line = this._interpolate(gridSource.x, gridSource.y, gridDestination.x, gridDestination.y);
         
-        let walkable = false;
+        let walkable = true;
         for (let j = 1; j < line.length; ++j) {
             let testCoord = line[j];
 
             if (!this._isWalkableAt(testCoord[0], testCoord[1])) {
-                walkable = true;
+                walkable = false;
                 break;
             }
         }
@@ -110,7 +110,7 @@ export default class RTSPathfinder {
     }
 
     _isWalkableAt(x, y) {
-        const tileType = this.grid[x, y];
+        const tileType = this.grid[y][x];
         return this._walkableTileTypes.includes(tileType);
     }
 
