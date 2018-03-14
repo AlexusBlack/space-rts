@@ -22,9 +22,9 @@ export default class RTSPathVisualizer {
         this._scene.add(navigationGrid);
 
         // marking all non-walkable tiles
-        for(let x = 0; x < this._grid.length; x++) {
-            for(let y = 0; y < this._grid[x].length; y++) {
-                if(!this._walkableTileTypes.includes(this._grid[x][y])) {
+        for(let y = 0; y < this._grid.length; y++) {
+            for(let x = 0; x < this._grid[y].length; x++) {
+                if(!this._walkableTileTypes.includes(this._grid[y][x])) {
                     //console.log(`${x},${y}: not walkable`);
                     const tileGeometry = new THREE.PlaneGeometry(this._density, this._density, 4);
                     const tileMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});

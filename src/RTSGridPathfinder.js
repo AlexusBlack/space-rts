@@ -35,9 +35,11 @@ export default class RTSPathfinder {
 
         for(let x = gridSource.x; x <= gridDestination.x; x++) {
             for(let y = gridSource.y; y <= gridDestination.y; y++) {
-                this.grid[x][y] = value;
+                this.grid[y][x] = value;
             }
         }
+
+        this._pathfinder.setGrid(this.grid);
     }
     
     async calculatePath(mapSource, mapDestination) {
