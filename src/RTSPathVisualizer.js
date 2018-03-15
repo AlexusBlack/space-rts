@@ -7,6 +7,8 @@ export default class RTSPathVisualizer {
         this._walkableTileTypes = walkableTileTypes;
 
         this._visualizeGrid();
+
+        window._pathVisualizer = this;
     }
 
     visualize(gridPath, mapPath) {
@@ -80,5 +82,25 @@ export default class RTSPathVisualizer {
             node.position.copy(debugPath[i]);
             pathLines.add(node);
         }
+    }
+
+    visualizeArc(center, radius, startAngle, endAngle) {
+        const curve = new THREE.EllipseCurve(
+            0, 0,            // ax, aY
+            radius, radius,           // xRadius, yRadius
+            startAngle * (Math.PI / 180),  endAngle * (Math.PI / 180),  // aStartAngle, aEndAngle
+            false,            // aClockwise
+            0                 // aRotation
+        );
+        const points = curve.getPoints(50);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        geometry.rotateX(Math.PI / 2);
+
+        const material = new THREE.LineBasicMaterial({ color : 0xff0000 });
+
+        // Create the final object to add to the scene
+        const ellipse = new THREE.Line(geometry, material);
+        ellipse.position.copy(center);
+        this._scene.add(ellipse);
     }
 }

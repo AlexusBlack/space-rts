@@ -48,7 +48,8 @@ export default class RTSPathfinder {
         const gridPath = await this._calculateGridPath(gridSource, gridDestination);
         const smoothedGridPath = this._smoothGridPath(gridPath);
         const mapPath = this._gridPathToMapPath(smoothedGridPath);
-        mapPath.push(mapDestination);
+        // replacing last path point with actual destination
+        mapPath[mapPath.length - 1] = mapDestination;
 
         if(this._visualize) {
             this._pathVisualizer.visualize(gridPath, mapPath);
@@ -196,5 +197,59 @@ export default class RTSPathfinder {
             mapPath.push(mapPathItem);
         }
         return mapPath;
+    }
+
+    _calculateArc(radius, rotation, mapSource, mapDestination, direction) {
+        const source = {
+            x: mapSource.x,
+            y: mapSource.z
+        };
+        const sourceRotation = direction == 'right' ? rotation + 90 : rotation - 90;
+        const destination = {
+            x: mapDestination.x,
+            y: mapDestination.z
+        };
+        const r = radius;
+        const angleToP = (sourceRotation - 90) * (Math.PI / 180);
+        const P = {
+            x: source.x + r * Math.cos(angleToP),
+            y: source.y + r * Math.sin(angleToP)
+        };
+        const dx = destination.x - P.x;
+        const dy = destination.y - P.y;
+        const h = Math.sqrt(dx*dx + dy*dy);
+    
+        if(h < r) {
+            // rotate in place and go straight to target
+            return;
+        }
+    
+        const d = Math.sqrt(h*h - r*r);
+        const theta = Math.acos(r / h);
+    
+        const phi = Math.atan(dy / dx);
+        const anglesRelation = direction == 'right' ? phi + theta : phi - theta;
+        const Q = {
+            x: P.x + r * Math.cos(anglesRelation),
+            y: P.y + r * Math.sin(anglesRelation)
+        };
+        const arcAngle = Math.PI * 2 - phi - theta - Math.PI / 2;
+        const arcAngleDeg = arcAngle * (180 / Math.PI) - 90;
+        const arcLength = arcAngle / (Math.PI * 2) / (Math.PI * 2 * r);
+        const fullLength = d + arcLength;
+    
+        console.log('angleTop: ', angleToP);
+        console.log('P: ', P);
+        console.log('dx, dy: ', `${dx}, ${dy}`);
+        console.log('h: ', h);
+        console.log('d: ', d);
+        console.log('theta: ', theta);
+        console.log('phi: ', phi);
+        console.log('Q: ', Q);
+        console.log('arcAngle: ', arcAngle);
+        console.log('arcAngleDeg: ', arcAngleDeg);
+        console.log('fullLength: ', fullLength);
+
+        this._pathVisualizer.visualizeArc(new THREE.Vector3(P.x, 0, P.y), radius, rotation, arcAngleDeg);
     }
 }
