@@ -96,14 +96,28 @@ export default class RTSPathVisualizer {
         const points = curve.getPoints( 50 );
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         geometry.rotateX(Math.PI / 2);
+        geometry.translate(0, 0, 0);
         const material = new THREE.LineBasicMaterial({ color : 0xff0000, linewidth: 3 });
         const ellipse = new THREE.Line(geometry, material);
 
         const currentVelocityGeometry = new THREE.Geometry();
-        currentVelocityGeometry.vertices.push(new THREE.Vector3(0,0,0));
-        currentVelocityGeometry.vertices.push(new THREE.Vector3(0, 0, 3 + 5));
+        currentVelocityGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        currentVelocityGeometry.vertices.push(new THREE.Vector3(0, 0, 8));
         const currentVelocityLine = new THREE.Line(currentVelocityGeometry, material);
         ellipse.add(currentVelocityLine);
+        ellipse.position.y = -0.2;
+
+        // const desiredVelocityMaterial = new THREE.LineBasicMaterial({ color : 0x9BEBEB, linewidth: 5 });
+        // const desiredVelocityGeometry = new THREE.Geometry();
+        // desiredVelocityGeometry.vertices.push(new THREE.Vector3(0,0,0));
+        // desiredVelocityGeometry.vertices.push(new THREE.Vector3(0, 0, 8));
+        // const desiredVelocityLine = new THREE.Line(desiredVelocityGeometry, desiredVelocityMaterial);
+        // unit.desiredRotation.onChange(() => {
+        //     desiredVelocityLine.rotation.copy(unit.desiredRotation);
+        // });
+        // desiredVelocityLine.rotation.copy(unit.desiredRotation);
+        // // desiredVelocityLine.rotation.y = Math.PI / 4;
+        // ellipse.add(desiredVelocityLine);
 
         unit._object.add(ellipse);
     }

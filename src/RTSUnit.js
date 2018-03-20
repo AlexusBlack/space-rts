@@ -16,6 +16,7 @@ export default class RTSUnit {
         this._object = this._pointOfOrigin;
         this.position = this._object.position;
         this.rotation = this._object.rotation;
+        this.desiredRotation = new THREE.Euler( 0, 0, 0, 'XYZ' );
 
         this.commands = [];
         this._currentCommand = null;
@@ -80,23 +81,49 @@ export default class RTSUnit {
     }
 
     _executeMoveCommand(command, secondFraction) {
-        if(command._path.length > 0) {
-            const targetPosition = command._path[0];
-            this._object.lookAt(targetPosition);
-            // console.log(targetPosition);
-            const vel = targetPosition.clone().sub(this.position);
+        const maxVelocity = 1;
+        const maxSpeed = 1;
+        const maxForce = 1;
+        const target = command._path[1];
+        const position = this.position;
+        const worldDirection = this._object.getWorldDirection();
+        const velocity = worldDirection.multiplyScalar(maxVelocity);
+        const desiredVelocity = (new THREE.Vector3()).subVectors(target, position).normalize().multiplyScalar(maxVelocity);
+        let steering = (new THREE.Vector3()).subVectors(desiredVelocity, velocity);
+        steering = steering.clampScalar(0, maxForce);
 
-            if (vel.lengthSq() > 0.05 * 0.05) {
-                vel.normalize();
-                // Mve player to target
-                this.position.add(vel.multiplyScalar(secondFraction * this.type.speed));
-            }
-            else {
-                // Remove node from the path we calculated
-                command._path.shift();
-            }
-        } else {
-            command.complete = true;
-        }
+        // console.log('Direction: ', worldDirection);
+        // console.log('Target: ', target);
+        // console.log('Position: ', position);
+        // console.log('Velocity: ', velocity);
+
+        // moving in direction of velocity
+        this.position.add(velocity.multiplyScalar(secondFraction));
     }
+    // _executeMoveCommand(command, secondFraction) {
+    //     if(command._path.length > 0) {
+    //         const targetPosition = command._path[0];
+
+    //         const desiredVelocity = (new THREE.Vector3()).subVectors(targetPosition, this.position);
+    //         desiredVelocity.multiplyScalar(this.type.maxSpeed);
+    //         this.desiredRotation.y = this.position.angleTo(desiredVelocity);
+    //         console.log(this.desiredRotation);
+
+    //         this._object.lookAt(targetPosition);
+    //         // console.log(targetPosition);
+    //         const vel = targetPosition.clone().sub(this.position);
+
+    //         if (vel.lengthSq() > 0.05 * 0.05) {
+    //             vel.normalize();
+    //             // Mve player to target
+    //             this.position.add(vel.multiplyScalar(secondFraction * this.type.maxSpeed));
+    //         }
+    //         else {
+    //             // Remove node from the path we calculated
+    //             command._path.shift();
+    //         }
+    //     } else {
+    //         command.complete = true;
+    //     }
+    // }
 }
