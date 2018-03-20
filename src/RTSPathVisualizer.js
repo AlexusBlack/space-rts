@@ -84,23 +84,27 @@ export default class RTSPathVisualizer {
         }
     }
 
-    visualizeArc(center, radius, startAngle, endAngle) {
+    visualizeUnit(unit) {
         const curve = new THREE.EllipseCurve(
-            0, 0,            // ax, aY
-            radius, radius,           // xRadius, yRadius
-            startAngle * (Math.PI / 180),  endAngle * (Math.PI / 180),  // aStartAngle, aEndAngle
+            0,  0,            // ax, aY
+            3, 3,           // xRadius, yRadius
+            0,  2 * Math.PI,  // aStartAngle, aEndAngle
             false,            // aClockwise
             0                 // aRotation
         );
-        const points = curve.getPoints(50);
+        
+        const points = curve.getPoints( 50 );
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         geometry.rotateX(Math.PI / 2);
-
-        const material = new THREE.LineBasicMaterial({ color : 0xff0000 });
-
-        // Create the final object to add to the scene
+        const material = new THREE.LineBasicMaterial({ color : 0xff0000, linewidth: 3 });
         const ellipse = new THREE.Line(geometry, material);
-        ellipse.position.copy(center);
-        this._scene.add(ellipse);
+
+        const currentVelocityGeometry = new THREE.Geometry();
+        currentVelocityGeometry.vertices.push(new THREE.Vector3(0,0,0));
+        currentVelocityGeometry.vertices.push(new THREE.Vector3(0, 0, 3 + 5));
+        const currentVelocityLine = new THREE.Line(currentVelocityGeometry, material);
+        ellipse.add(currentVelocityLine);
+
+        unit._object.add(ellipse);
     }
 }
