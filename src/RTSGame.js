@@ -5,10 +5,12 @@ import * as THREE from 'three';
 import SceneException from './Exceptions/SceneException';
 import MapException from './Exceptions/MapException';
 import GameState from './Enums/GameState';
+import RTSUnitCommandType from './Enums/RTSUnitCommandType';
 
 /* Classes */
 import RTSUI from './RTSUI';
 import RTSScene from './RTSScene';
+import RTSUnitCommand from './RTSUnitCommand';
 
 export default class RTSGame {
     constructor(map) {
@@ -20,6 +22,12 @@ export default class RTSGame {
         this._map = map;
 
         this._scene = new RTSScene(map);
+        this._scene.on('map-click', position => {
+            console.log(position);
+            const command = new RTSUnitCommand(RTSUnitCommandType.Move);
+            command.destination = position;
+            map.units[0].commands.push(command);
+        });
 
         this._lastFrameTime = null;
     }

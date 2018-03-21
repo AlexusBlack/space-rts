@@ -1,9 +1,11 @@
 import * as THREE from 'three';
+import EventEmitter from 'events';
 import RTSControls from './RTSControls';
 
 
-export default class RTSScene {
+export default class RTSScene extends EventEmitter {
     constructor(map) {
+        super();
         if(map == null) throw new MapException('Map is required to init scene');
 
         this._map = map;
@@ -27,6 +29,10 @@ export default class RTSScene {
         );
         this._controls = new RTSControls(this._camera, this._renderer.domElement, this._scene, boundaries);
         this._controls.position.copy(map.cameraPostion);
+        
+        // Handling use clicks
+        this._raycaster = new THREE.Raycaster();
+        document.addEventListener('click', (event) => this._documentMouseClickHandler(event), false);
 
         // Adding level mesh to calculate click raycasts
         this.level = this._createLevel(this._map.size);
@@ -45,6 +51,20 @@ export default class RTSScene {
         this._camera.aspect = window.innerWidth / window.innerHeight;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    _documentMouseClickHandler(event) {
+        const mousePosition = {};
+        mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mousePosition.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        this._raycaster.setFromCamera(mousePosition, this._camera);
+
+        const intersects = this._raycaster.intersectObject(this.level);
+        if(intersects.length > 0) {
+            const vec = intersects[0].point;
+            this.emit('map-click', vec);
+            // console.log(vec);
+        }
     }
 
     _createLevel(size) {
