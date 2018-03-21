@@ -6,6 +6,10 @@ export default class RTSPathVisualizer {
         this._grid = grid;
         this._walkableTileTypes = walkableTileTypes;
 
+        this._gridTiles = [];
+        this._mapLines = [];
+        this._mapDots = [];
+
         this._visualizeGrid();
 
         window._pathVisualizer = this;
@@ -14,6 +18,10 @@ export default class RTSPathVisualizer {
     visualize(gridPath, mapPath) {
         this._visualizeMapPath(mapPath);
         this._visualizeGridPath(gridPath);
+    }
+
+    _cleanItems(collection) {
+        collection.map(item => this._scene.remove(item));
     }
 
     _visualizeGrid() {
@@ -43,6 +51,8 @@ export default class RTSPathVisualizer {
     }
 
     _visualizeGridPath(gridPath) {
+        this._cleanItems(this._gridTiles);
+
         for(let i = 0; i < gridPath.length; i++) {
             const tileGeometry = new THREE.PlaneGeometry(this._density, this._density, 4);
             const tileMaterial = new THREE.MeshBasicMaterial({color: 0x18dd11, side: THREE.DoubleSide});
@@ -53,11 +63,15 @@ export default class RTSPathVisualizer {
             tile.position.x = gridPath[i].x * this._density + this._density / 2;
             tile.position.z = gridPath[i].y * this._density + this._density / 2;
             
+            this._gridTiles.push(tile);
             this._scene.add(tile);
         }
     }
 
     _visualizeMapPath(mapPath) {
+        this._cleanItems(this._mapLines);
+        this._cleanItems(this._mapDots);
+
         var material = new THREE.LineBasicMaterial({
             color: 0xffffff,
             linewidth: 2
@@ -69,16 +83,18 @@ export default class RTSPathVisualizer {
             geometry.vertices.push(mapPath[i].clone().add(new THREE.Vector3(0, 0.2, 0)));
         }
         const pathLines = new THREE.Line(geometry, material);
+        this._mapLines.push(pathLines);
         this._scene.add(pathLines);
 
         // Draw debug cubes except the last one. Also, add the player position.
         const debugPath = [mapPath[0]].concat(mapPath);
 
-        for (let i = 0; i < debugPath.length - 1; i++) {
+        for (let i = 0; i < debugPath.length; i++) {
             const boxGeometry = new THREE.BoxGeometry( 0.5, 0.5, 0.5 );
             const boxMaterial = new THREE.MeshBasicMaterial( {color: 0x00ffff} );
             const node = new THREE.Mesh(boxGeometry, boxMaterial);
             node.position.copy(debugPath[i]);
+            this._mapDots.push(node);
             pathLines.add(node);
         }
     }
@@ -105,18 +121,6 @@ export default class RTSPathVisualizer {
         const currentVelocityLine = new THREE.Line(currentVelocityGeometry, material);
         ellipse.add(currentVelocityLine);
         ellipse.position.y = -0.2;
-
-        // const desiredVelocityMaterial = new THREE.LineBasicMaterial({ color : 0x9BEBEB, linewidth: 5 });
-        // const desiredVelocityGeometry = new THREE.Geometry();
-        // desiredVelocityGeometry.vertices.push(new THREE.Vector3(0,0,0));
-        // desiredVelocityGeometry.vertices.push(new THREE.Vector3(0, 0, 8));
-        // const desiredVelocityLine = new THREE.Line(desiredVelocityGeometry, desiredVelocityMaterial);
-        // unit.desiredRotation.onChange(() => {
-        //     desiredVelocityLine.rotation.copy(unit.desiredRotation);
-        // });
-        // desiredVelocityLine.rotation.copy(unit.desiredRotation);
-        // // desiredVelocityLine.rotation.y = Math.PI / 4;
-        // ellipse.add(desiredVelocityLine);
 
         unit._object.add(ellipse);
     }

@@ -49,7 +49,7 @@ export default class RTSPathfinder {
         const smoothedGridPath = this._smoothGridPath(gridPath);
         const mapPath = this._gridPathToMapPath(smoothedGridPath);
         // replacing last path point with actual destination
-        mapPath[mapPath.length - 1] = mapDestination;
+        //mapPath[mapPath.length - 1] = mapDestination;
 
         if(this._visualize) {
             this._pathVisualizer.visualize(gridPath, mapPath);
