@@ -19,10 +19,13 @@
   "devDependencies": {
     "createjs-easeljs": "0.8.2",
     "css-loader": "^0.28.10",
+    "deg2rad": "^1.0.0",
     "exports-loader": "^0.7.0",
     "html-webpack-plugin": "^3.0.6",
     "imports-loader": "^0.8.0",
+    "rad2deg": "^1.0.0",
     "style-loader": "^0.20.2",
+    "three-steer": "git+https://github.com/AlexusBlack/three-steer.git#v0.2",
     "webpack": "^3.11.0"
   },
   "dependencies": {

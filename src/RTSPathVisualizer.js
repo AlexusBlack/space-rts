@@ -12,7 +12,6 @@ export default class RTSPathVisualizer {
     }
 
     visualize(gridPath, mapPath) {
-        console.log(gridPath, mapPath);
         this._visualizeMapPath(mapPath);
         this._visualizeGridPath(gridPath);
     }
