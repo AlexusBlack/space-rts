@@ -72,9 +72,9 @@ export default class RTSUnit {
     }
 
     async _setupMoveCommand(command) {
-        if(this._pathfinder == null) new UnitException('Pathfinder required fro Move command');
+        if(this._pathfinder == null) new UnitException('Pathfinder required for Move command');
         const path = await this._pathfinder.calculatePath(this.position, command.destination);
-        path.shift();
+        //path.shift();
         command._path = path;
         command.setupFinished = true;
     }
@@ -99,9 +99,12 @@ export default class RTSUnit {
     }
 
     _seek(target, secondFraction) {
-        const maxSpeed = this.type.maxSpeed;
+        let maxSpeed = this.type.maxSpeed;
         const maxTurn = this.type.turnSpeed;
         const worldDirection = this._object.getWorldDirection();
+        if(this.position.distanceTo(target) < maxSpeed) {
+            maxSpeed = 1;
+        }
         const velocity = worldDirection.multiplyScalar(maxSpeed);
         const desiredVelocity = (new THREE.Vector3()).subVectors(target, this.position).normalize().multiplyScalar(maxSpeed);
 

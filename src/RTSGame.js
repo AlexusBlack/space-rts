@@ -24,9 +24,11 @@ export default class RTSGame {
         this._scene = new RTSScene(map);
         this._scene.on('map-click', position => {
             console.log(position);
+            const unit = map.units[0];
+            unit.cancelCommand();
             const command = new RTSUnitCommand(RTSUnitCommandType.Move);
             command.destination = position;
-            map.units[0].commands.push(command);
+            unit.commands.push(command);
         });
 
         this._lastFrameTime = null;

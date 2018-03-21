@@ -51,7 +51,7 @@ export default class RTSPathfinder {
         // replacing last path point with actual destination
         //mapPath[mapPath.length - 1] = mapDestination;
 
-        if(this._visualize) {
+        if(this._visualize && smoothedGridPath.length > 0) {
             this._pathVisualizer.visualize(gridPath, mapPath);
         }
 
@@ -71,7 +71,7 @@ export default class RTSPathfinder {
 
     _smoothGridPath(path) {
         const newPath = [];
-
+        if(path == null || path.length == 0) return [];
         let startPoint = path[0];
         // we need our start point in path without doubt
         newPath.push(startPoint);
