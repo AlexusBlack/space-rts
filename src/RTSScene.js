@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import EventEmitter from 'events';
 import RTSControls from './RTSControls';
+import TWEEN from '@tweenjs/tween.js';
 
 
 export default class RTSScene extends EventEmitter {
@@ -29,6 +30,7 @@ export default class RTSScene extends EventEmitter {
         );
         this._controls = new RTSControls(this._camera, this._renderer.domElement, this._scene, boundaries);
         this._controls.position.copy(map.cameraPostion);
+        this._createClickIndicator();
         
         // Handling use clicks
         this._raycaster = new THREE.Raycaster();
@@ -61,8 +63,9 @@ export default class RTSScene extends EventEmitter {
 
         const intersects = this._raycaster.intersectObject(this.level);
         if(intersects.length > 0) {
-            const vec = intersects[0].point;
-            this.emit('map-click', vec);
+            const position = intersects[0].point;
+            this._showClick(position);
+            this.emit('map-click', position);
             // console.log(vec);
         }
     }
@@ -84,6 +87,16 @@ export default class RTSScene extends EventEmitter {
         return level;
     }
 
+    _createClickIndicator() {
+        const geometry = new THREE.RingGeometry( 1, 2, 8 );
+        geometry.rotateX(Math.PI / 2);
+        const material = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide } );
+        this._clickIndicator = new THREE.Mesh(geometry, material);
+        this._clickIndicator.visible = false
+
+        this._scene.add(this._clickIndicator);
+    }
+
     _createHelperGrid(size) {
         const density = size / 10;
         const helperGrid = new THREE.GridHelper(size, size/10, new THREE.Color(0x333333), new THREE.Color(0x333333));
@@ -91,6 +104,20 @@ export default class RTSScene extends EventEmitter {
         helperGrid.position.z += size / 2;
 
         return helperGrid;
+    }
+
+    _showClick(position) {
+        this._clickIndicator.position.copy(position);
+        this._clickIndicator.scale.set(1, 1, 1);
+        this._clickIndicator.visible = true;
+        if(this._clickIndicator.animation != null) {
+            this._clickIndicator.animation.stop();
+        }
+        this._clickIndicator.animation = new TWEEN.Tween(this._clickIndicator.scale)
+            .to({x: 0.1, y: 1, z: 0.1}, 1000)
+            .easing(TWEEN.Easing.Quadratic.Out)
+            .start()
+            .onComplete(() => this._clickIndicator.visible = false);
     }
 
     update(secondFraction) {

@@ -20,8 +20,8 @@ export default class RTSMap {
         // demo area
         this._pathfinder.setArea(new THREE.Vector3(70,0,0), new THREE.Vector3(80,0,40), 1);
 
-        this._pathVisualizer = new RTSPathVisualizer(scene, this.size, gridDensity, this._pathfinder.grid, walkableTileTypes);
-        this._pathfinder.enableVisualization(this._pathVisualizer);
+        //this._pathVisualizer = new RTSPathVisualizer(scene, this.size, gridDensity, this._pathfinder.grid, walkableTileTypes);
+        //this._pathfinder.enableVisualization(this._pathVisualizer);
 
         // Loading lights from map
         this._createLights(scene);
@@ -55,7 +55,7 @@ export default class RTSMap {
         for(var unit of this.units) {
             unit.setPathfinder(this._pathfinder);
             scene.add(unit._object);
-            this._pathVisualizer.visualizeUnit(unit);
+            //this._pathVisualizer.visualizeUnit(unit);
         }
     }
 

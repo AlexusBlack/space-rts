@@ -1,5 +1,6 @@
 /* Third party */
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 
 /* Types */
 import SceneException from './Exceptions/SceneException';
@@ -51,6 +52,7 @@ export default class RTSGame {
     update(timestamp) {
         const thisFrameTime = window.performance.now();
         if(this.state != GameState.Stoped && this.state != GameState.Paused) {
+            TWEEN.update(timestamp);
             requestAnimationFrame((timestamp) => this.update(timestamp));
         }
 
