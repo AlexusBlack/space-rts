@@ -21,11 +21,14 @@ export default class RTSGame {
 
         this._players = [];
         this._map = map;
+        this._selectedUnit = null;
 
         this._scene = new RTSScene(map);
+        this._scene.on('unit-selected', unit => this._selectedUnit = unit);
         this._scene.on('map-click', position => {
-            console.log(position);
-            const unit = map.units[0];
+            //console.log(position);
+            if(this._selectedUnit == null) return;
+            const unit = this._selectedUnit;
             unit.cancelCommand();
             const command = new RTSUnitCommand(RTSUnitCommandType.Move);
             command.destination = position;

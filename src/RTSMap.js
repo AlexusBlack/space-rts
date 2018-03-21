@@ -18,7 +18,7 @@ export default class RTSMap {
         const walkableTileTypes = [0];
         this._pathfinder = new RTSPathfinder(this, gridDensity, walkableTileTypes);
         // demo area
-        this._pathfinder.setArea(new THREE.Vector3(70,0,0), new THREE.Vector3(80,0,40), 1);
+        //this._pathfinder.setArea(new THREE.Vector3(70,0,0), new THREE.Vector3(80,0,40), 1);
 
         //this._pathVisualizer = new RTSPathVisualizer(scene, this.size, gridDensity, this._pathfinder.grid, walkableTileTypes);
         //this._pathfinder.enableVisualization(this._pathVisualizer);

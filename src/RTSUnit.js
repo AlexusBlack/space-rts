@@ -18,6 +18,15 @@ export default class RTSUnit {
         this._pointOfOrigin.add(this._model);
         
         this._object = this._pointOfOrigin;
+        const intersectBodyGeometry = new THREE.PlaneGeometry(8, 8, 4);
+        intersectBodyGeometry.rotateX(Math.PI / 2);
+        const intersectBodyMaterial = new THREE.MeshBasicMaterial({color: 0x00bfff, side: THREE.DoubleSide});
+        intersectBodyMaterial.visible = false;
+        intersectBodyMaterial.transparent = true;
+        intersectBodyMaterial.opacity = 0.1;
+        this.intersectBody = new THREE.Mesh(intersectBodyGeometry, intersectBodyMaterial);
+        this.intersectBody.unit = this;
+        this._object.add(this.intersectBody);
 
         this.position = this._object.position;
         this.rotation = this._object.rotation;
@@ -59,7 +68,7 @@ export default class RTSUnit {
             }
         } else if(this._currentCommand == null && this.commands.length > 0) {
             this._currentCommand = this.commands.shift();
-            console.log('New Command: ', this._currentCommand);
+            //console.log('New Command: ', this._currentCommand);
             await this._setupCommand(this._currentCommand);
         }
         

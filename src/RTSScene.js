@@ -61,12 +61,36 @@ export default class RTSScene extends EventEmitter {
         mousePosition.y = - (event.clientY / window.innerHeight) * 2 + 1;
         this._raycaster.setFromCamera(mousePosition, this._camera);
 
-        const intersects = this._raycaster.intersectObject(this.level);
-        if(intersects.length > 0) {
-            const position = intersects[0].point;
-            this._showClick(position);
-            this.emit('map-click', position);
-            // console.log(vec);
+        // Unit intersects
+        const unitObjects = this._map.units.map(unit => unit.intersectBody);
+        const unitIntersects = this._raycaster.intersectObjects(unitObjects);
+        //console.log(unitIntersects);
+
+        if(unitIntersects.length > 0) {
+            // unitIntersects[0].object.material.visible = true;
+            const unit = unitIntersects[0].object.unit;
+            this.selectUnit(unit);
+            //console.log('Selected unit: ', unitIntersects[0].object.unit);
+            this.emit('unit-selected', unit)
+        } else {
+            // Terrain intersects
+            const terrainIntersects = this._raycaster.intersectObject(this.level);
+            if(terrainIntersects.length > 0) {
+                const position = terrainIntersects[0].point;
+                this._showClick(position);
+                this.emit('map-click', position);
+                // console.log(vec);
+            }
+        }
+    }
+
+    selectUnit(unitToSelect) {
+        for(let unit of this._map.units) {
+            if(unit === unitToSelect) {
+                unit.intersectBody.material.visible = true;
+            } else {
+                unit.intersectBody.material.visible = false;
+            }
         }
     }
 
